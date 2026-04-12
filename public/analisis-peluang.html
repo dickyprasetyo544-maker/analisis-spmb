@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Peluang - SPMB SMPN 8 Probolinggo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        /* === GAYA PREMIUM & RESPONSIVE === */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            overflow-x: hidden;
+        }
+        
+        #wrapper { display: flex; width: 100vw; height: 100vh; }
+        
+        /* Sidebar Mewah */
+        #sidebar-wrapper {
+            width: 260px;
+            flex-shrink: 0;
+            transition: all 0.3s ease-in-out;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            z-index: 1050;
+        }
+        
+        #page-content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Custom Autocomplete Sugesti */
+.sugesti-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(0,0,0,0.05);
+    margin-top: 5px;
+}
+.sugesti-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+.sugesti-item:last-child { border-bottom: none; }
+.sugesti-item:hover { background: #f8fafc; color: #0d6efd; font-weight: 500; }
+
+        .sidebar-link {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 14px 20px;
+            display: block;
+            border-radius: 12px;
+            margin: 8px 15px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        /* Card Premium */
+        .card-premium {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .result-card {
+            border-radius: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.08) !important;
+        }
+
+        /* Nav Pills Modern */
+        .nav-pills .nav-link {
+            border-radius: 12px;
+            padding: 10px 24px;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+
+        /* Responsif HP */
+        @media (max-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: -260px;
+                position: fixed;
+                height: 100vh;
+            }
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: 0;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            }
+            #wrapper.toggled::after {
+                content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5); z-index: 1040;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+        <div class="text-white shadow-lg" id="sidebar-wrapper">
+            <div class="p-4 fw-bold fs-5 border-bottom border-secondary text-center text-white" style="letter-spacing: 1px;">
+                🎓 SPMB SMPN 8
+            </div>
+            <div class="mt-4" id="menuSidebar">
+                <a href="dashboard.html" class="sidebar-link"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
+                <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
+                <a href="analisis-peluang.html" class="sidebar-link active"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
+                
+                <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
+            </div>
+        </div>
+
+        <div id="page-content-wrapper">
+            
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 sticky-top">
+                <div class="d-flex align-items-center w-100 justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-light d-md-none border-0 shadow-sm" id="menu-toggle">
+                            <i class="bi bi-list fs-4"></i>
+                        </button>
+                        <h5 class="mb-0 fw-bold text-primary d-none d-sm-block">Analisis Peluang Lanjut Sekolah</h5>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-none d-md-block text-end">
+                            <span class="text-dark fw-bold d-block" id="welcomeText" style="line-height: 1;">User</span>
+                            <small class="text-muted" id="roleText">Siswa</small>
+                        </div>
+                        <button class="btn btn-danger btn-sm rounded-pill fw-bold px-3 shadow-sm" onclick="logout()">
+                            <i class="bi bi-power"></i> <span class="d-none d-md-inline">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4 p-md-5">
+                
+                <div class="d-flex justify-content-end mb-4 gap-2 d-none" id="adminActions">
+                    <button class="btn btn-success fw-bold shadow-sm rounded-pill px-4" onclick="downloadExcelNKA()">
+                        <i class="bi bi-file-earmark-excel-fill"></i> Download NKA
+                    </button>
+                    <a href="kelola-passing-grade.html" class="btn btn-warning fw-bold shadow-sm rounded-pill px-4">
+                        <i class="bi bi-pencil-square"></i> Edit Passing Grade
+                    </a>
+                </div>
+
+                <div class="card card-premium mb-4">
+                    <div class="card-body p-4 p-md-5">
+                        
+                        <ul class="nav nav-pills justify-content-center justify-content-md-start mb-5 gap-2" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-bold border" id="pills-skor-tab" data-bs-toggle="pill" data-bs-target="#pills-skor" type="button" role="tab">
+                                    <i class="bi bi-search me-1"></i> Cek Skor
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold border" id="pills-peluang-tab" data-bs-toggle="pill" data-bs-target="#pills-peluang" type="button" role="tab">
+                                    <i class="bi bi-bullseye me-1"></i> Simulasi Peluang
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="pills-tabContent">
+                            
+                            <div class="tab-pane fade show active" id="pills-skor" role="tabpanel">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8 text-center">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-block p-3 mb-3">
+                                            <i class="bi bi-calculator-fill fs-3"></i>
+                                        </div>
+                                        <h4 class="fw-bold mb-2">Cek Kemampuan Akademik</h4>
+                                        <p class="text-muted mb-4">Masukkan nama siswa untuk mengakumulasi nilai Rapor (60%) dan TKA (40%).</p>
+                                        
+                                        <div class="position-relative w-100 mb-4">
+                                            <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border">
+                                                <input type="text" id="cariNamaSkor" class="form-control border-0 px-4 position-relative z-3" placeholder="Ketik nama siswa..." autocomplete="off">
+                                                <button class="btn btn-primary px-4 fw-bold" id="btnCariSkor" onclick="cariSkor()"><i class="bi bi-search"></i> Cari</button>
+                                            </div>
+                                            <ul id="sugestiNama" class="list-unstyled d-none sugesti-list"></ul>
+                                        </div>
+
+                                        <div id="emptyStateSkor" class="d-none mt-5 text-center">
+                                            <i class="bi bi-search text-muted opacity-50" style="font-size: 3.5rem;"></i>
+                                            <h5 class="fw-bold text-secondary mt-3">Siswa Tidak Ditemukan</h5>
+                                            <p class="text-muted small">Silakan periksa kembali nama yang diketik atau data belum dimasukkan ke sistem.</p>
+                                        </div>
+                                        
+                                        <div id="hasilSkor" class="d-none mt-5">
+                                            <div class="card bg-gradient text-white shadow-lg rounded-4 border-0" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                                                <div class="card-body p-4 p-md-5">
+                                                    <h3 class="fw-bold mb-1" id="resNamaSiswa">-</h3>
+                                                    <p class="mb-4 text-white-50">Akumulasi Nilai Akhir (NKA)</p>
+                                                    <div class="row text-center g-3">
+                                                        <div class="col-12 col-md-4 border-md-end border-light border-opacity-25">
+                                                            <div class="small opacity-75">Rata-rata Rapor (60%)</div>
+                                                            <div class="fs-2 fw-bold" id="resRapor">0</div>
+                                                        </div>
+                                                        <div class="col-12 col-md-4 border-md-end border-light border-opacity-25">
+                                                            <div class="small opacity-75">Nilai TKA (40%)</div>
+                                                            <div class="fs-2 fw-bold" id="resTKA">0</div>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <div class="small text-warning fw-bold">Skor Final NKA</div>
+                                                            <div class="fs-1 fw-bold text-warning" id="resTotal">0</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="pills-peluang" role="tabpanel">
+                                <div class="row g-5">
+                                    <div class="col-lg-5 border-lg-end pe-lg-4">
+                                        <h5 class="fw-bold mb-4 d-flex align-items-center">
+                                            <i class="bi bi-sliders text-primary me-2"></i> Parameter Simulasi
+                                        </h5>
+                                        
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold text-secondary small">Siswa yang dianalisis</label>
+                                            <div class="position-relative w-100">
+                                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                                    <input type="text" id="namaSiswaPeluang" class="form-control border-light position-relative z-3" placeholder="Ketik nama siswa..." autocomplete="off">
+                                                    <button class="btn btn-primary" id="btnSetPeluang" onclick="tarikSkorUntukPeluang()"><i class="bi bi-check2-circle"></i> Set</button>
+                                                </div>
+                                                <ul id="sugestiPeluang" class="list-unstyled d-none sugesti-list"></ul>
+                                            </div>
+
+                                            <div class="mt-2 text-success fw-medium d-none" id="infoSkorPeluang">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Skor NKA: <span id="skorAktifLabel" class="fw-bold fs-5">0</span>
+                                            </div>
+                                            <div class="mt-2 text-danger fw-medium d-none small" id="errSkorPeluang">
+                                                <i class="bi bi-exclamation-circle-fill me-1"></i> Siswa tidak ditemukan!
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold text-secondary small">Tujuan Jenjang</label>
+                                            <div class="d-flex gap-3 bg-light p-2 rounded-3 border">
+                                                <div class="form-check flex-fill text-center m-0">
+                                                    <input class="form-check-input d-none" type="radio" name="jenjang" id="radioSMA" value="SMA" onchange="toggleFormPilihan()" checked>
+                                                    <label class="form-check-label w-100 py-2 rounded-2 fw-bold btn btn-outline-primary border-0" for="radioSMA">SMA</label>
+                                                </div>
+                                                <div class="form-check flex-fill text-center m-0">
+                                                    <input class="form-check-input d-none" type="radio" name="jenjang" id="radioSMK" value="SMK" onchange="toggleFormPilihan()">
+                                                    <label class="form-check-label w-100 py-2 rounded-2 fw-bold btn btn-outline-primary border-0" for="radioSMK">SMK</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold text-secondary small">Pilih Sekolah Tujuan</label>
+                                            <select id="pilihSekolah" class="form-select form-select-lg shadow-sm border-light" onchange="updateJurusanSMK()">
+                                                <option value="">-- Loading Data... --</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="formJurusanSMK" class="d-none bg-primary bg-opacity-10 p-4 rounded-4 border border-primary border-opacity-25 mb-4">
+                                            <label class="form-label fw-bold text-primary mb-3"><i class="bi bi-tools me-1"></i> Pilihan Jurusan SMK</label>
+                                            <select id="jurusan1" class="form-select mb-3 shadow-sm"><option value="">Pilihan 1...</option></select>
+                                            <select id="jurusan2" class="form-select mb-3 shadow-sm"><option value="">Pilihan 2...</option></select>
+                                            <select id="jurusan3" class="form-select shadow-sm"><option value="">Pilihan 3...</option></select>
+                                        </div>
+
+                                        <button class="btn btn-success w-100 fw-bold py-3 shadow rounded-4 text-uppercase tracking-wider" onclick="hitungPeluang()">
+                                            <i class="bi bi-magic me-2"></i> Analisis Sekarang
+                                        </button>
+                                    </div>
+
+                                    <div class="col-lg-7 ps-lg-4">
+                                        <h5 class="fw-bold mb-4 text-center text-lg-start">Hasil Analisis Sistem</h5>
+                                        <div id="areaHasilPeluang" class="text-center py-5 text-muted border border-dashed rounded-4 bg-light d-flex flex-column justify-content-center" style="min-height: 400px;">
+                                            <i class="bi bi-clipboard-data text-primary opacity-50 mb-3" style="font-size: 4rem;"></i>
+                                            <p class="fs-5 fw-medium">Area Hasil Analisis</p>
+                                            <p class="small text-muted">Lengkapi form di samping lalu klik tombol "Analisis Sekarang" untuk melihat peluang lolos.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+
+    <script>
+        // --- 1. TOGGLE SIDEBAR UNTUK HP ---
+        document.getElementById("menu-toggle").addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("wrapper").classList.toggle("toggled");
+        });
+
+        document.addEventListener('click', function(event) {
+            const wrapper = document.getElementById('wrapper');
+            const isClickInsideSidebar = document.getElementById('sidebar-wrapper').contains(event.target);
+            const isClickToggle = document.getElementById('menu-toggle').contains(event.target);
+
+            if (wrapper.classList.contains('toggled') && !isClickInsideSidebar && !isClickToggle) {
+                wrapper.classList.remove('toggled');
+            }
+        });
+
+        // --- 2. LOGIKA APLIKASI ---
+        const userName = localStorage.getItem('userName');
+        const userRole = localStorage.getItem('userRole') || 'user'; 
+        
+        if (!userName) window.location.href = 'index.html';
+        
+        document.getElementById('welcomeText').innerText = userName;
+        
+        // KONFIGURASI TAMPILAN BERDASARKAN ROLE
+        if (userRole === 'admin') {
+            document.getElementById('roleText').innerText = 'Admin';
+            document.getElementById('menuAdminPG').classList.remove('d-none');
+            document.getElementById('adminActions').classList.remove('d-none');
+        } else {
+            document.getElementById('roleText').innerText = 'Siswa';
+            
+            const inputCariSkor = document.getElementById('cariNamaSkor');
+            inputCariSkor.value = userName;
+            inputCariSkor.setAttribute('readonly', true);
+            
+            const inputCariPeluang = document.getElementById('namaSiswaPeluang');
+            inputCariPeluang.value = userName;
+            inputCariPeluang.setAttribute('readonly', true);
+        }
+
+        function logout() {
+            localStorage.clear(); window.location.href = 'index.html'; 
+        }
+
+        let dataPassingGrade = { SMA: {}, SMK: {} };
+        let dataRaporGlobal = [];
+        let dataTKAGlobal = [];
+        let skorAktifSiswa = 0; 
+
+        async function fetchSemuaData() {
+            try {
+                // Di sistem nyatamu gunakan fetch yang asli, misal:
+                // const resRapor = await fetch('/api/data-rapor');
+                // const jsonRapor = await resRapor.json();
+                // if(jsonRapor.success) dataRaporGlobal = jsonRapor.data;
+                
+                // MOCKUP DATA (Karena tidak ada backend terhubung di contoh ini)
+                dataRaporGlobal = [
+                    { nama_siswa: "Ahmad", rata_rata: 85.5 },
+                    { nama_siswa: "Budi", rata_rata: 90.0 }
+                ];
+                dataTKAGlobal = [
+                    { nama_siswa: "Ahmad", nilai_total: 80.0 },
+                    { nama_siswa: "Budi", nilai_total: 88.0 }
+                ];
+                dataPassingGrade = {
+                    SMA: { "SMAN 1 Probolinggo": 84.0, "SMAN 2 Probolinggo": 82.5 },
+                    SMK: {
+                        "SMKN 1 Probolinggo": { "TKJ": 83.0, "Multimedia": 81.5 },
+                        "SMKN 2 Probolinggo": { "Akuntansi": 80.0, "Pemasaran": 78.5 }
+                    }
+                };
+
+                toggleFormPilihan(); 
+
+                if (userRole === 'user') {
+                    cariSkor();
+                    tarikSkorUntukPeluang();
+                }
+
+            } catch (err) {
+                console.error("Gagal ambil data:", err);
+            }
+        }
+
+        fetchSemuaData();
+
+        function cariSkor() {
+            const namaDicari = document.getElementById('cariNamaSkor').value.toLowerCase().trim();
+            if(!namaDicari) return alert("Masukkan nama dulu!");
+
+            const rapor = dataRaporGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+            const tka = dataTKAGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+
+            if (!rapor && !tka) {
+                if (userRole === 'admin') alert("Data siswa tidak ditemukan!");
+                document.getElementById('hasilSkor').classList.add('d-none');
+                return;
+            }
+
+            const nilaiRapor = rapor ? parseFloat(rapor.rata_rata) : 0;
+            const nilaiTKA = tka ? parseFloat(tka.nilai_total) : 0;
+            
+            // PERBAIKAN: Rumus Rapor 60% dan TKA 40%
+            const skorAkhir = ((nilaiRapor * 0.6) + (nilaiTKA * 0.4)).toFixed(2); 
+
+            document.getElementById('resNamaSiswa').innerText = (rapor || tka).nama_siswa;
+            document.getElementById('resRapor').innerText = nilaiRapor;
+            document.getElementById('resTKA').innerText = nilaiTKA;
+            document.getElementById('resTotal').innerText = skorAkhir;
+            document.getElementById('hasilSkor').classList.remove('d-none');
+        }
+
+        function tarikSkorUntukPeluang() {
+            const namaDicari = document.getElementById('namaSiswaPeluang').value.toLowerCase().trim();
+            if(!namaDicari) return alert("Masukkan nama siswa!");
+
+            const rapor = dataRaporGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+            const tka = dataTKAGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+
+            if (!rapor && !tka) return;
+
+            const nRapor = rapor ? parseFloat(rapor.rata_rata) : 0;
+            const nTKA = tka ? parseFloat(tka.nilai_total) : 0;
+            
+            // PERBAIKAN: Rumus Rapor 60% dan TKA 40%
+            skorAktifSiswa = ((nRapor * 0.6) + (nTKA * 0.4)).toFixed(2);
+
+            document.getElementById('infoSkorPeluang').classList.remove('d-none');
+            document.getElementById('skorAktifLabel').innerText = skorAktifSiswa;
+            document.getElementById('namaSiswaPeluang').value = (rapor || tka).nama_siswa; 
+        }
+
+        function toggleFormPilihan() {
+            const isSMA = document.getElementById('radioSMA').checked;
+            const selectSekolah = document.getElementById('pilihSekolah');
+            const formJurusan = document.getElementById('formJurusanSMK');
+
+            selectSekolah.innerHTML = ''; 
+
+            if(isSMA) {
+                document.querySelector('label[for="radioSMA"]').classList.replace('btn-outline-primary', 'btn-primary');
+                document.querySelector('label[for="radioSMK"]').classList.replace('btn-primary', 'btn-outline-primary');
+            } else {
+                document.querySelector('label[for="radioSMK"]').classList.replace('btn-outline-primary', 'btn-primary');
+                document.querySelector('label[for="radioSMA"]').classList.replace('btn-primary', 'btn-outline-primary');
+            }
+
+            if (isSMA) {
+                formJurusan.classList.add('d-none');
+                const smaKeys = Object.keys(dataPassingGrade.SMA);
+                if (smaKeys.length === 0) { selectSekolah.innerHTML = '<option value="">-- Data belum dimuat --</option>'; return; }
+                smaKeys.forEach(sekolah => selectSekolah.innerHTML += `<option value="${sekolah}">${sekolah}</option>`);
+            } else {
+                formJurusan.classList.remove('d-none');
+                const smkKeys = Object.keys(dataPassingGrade.SMK);
+                if (smkKeys.length === 0) { selectSekolah.innerHTML = '<option value="">-- Data belum dimuat --</option>'; return; }
+                smkKeys.forEach(sekolah => selectSekolah.innerHTML += `<option value="${sekolah}">${sekolah}</option>`);
+                updateJurusanSMK(); 
+            }
+        }
+
+        function updateJurusanSMK() {
+            const isSMA = document.getElementById('radioSMA').checked;
+            if (isSMA) return;
+
+            const sekolahTerpilih = document.getElementById('pilihSekolah').value;
+            if(!sekolahTerpilih || !dataPassingGrade.SMK[sekolahTerpilih]) return;
+
+            const daftarJurusan = Object.keys(dataPassingGrade.SMK[sekolahTerpilih]);
+            
+            ['jurusan1', 'jurusan2', 'jurusan3'].forEach((id, index) => {
+                const select = document.getElementById(id);
+                select.innerHTML = `<option value="">-- Pilihan ${index + 1} --</option>`;
+                daftarJurusan.forEach(jurusan => select.innerHTML += `<option value="${jurusan}">${jurusan}</option>`);
+            });
+        }
+
+        function hitungPeluang() {
+            if(skorAktifSiswa == 0) return alert("Nilai siswa belum tersistem/kosong!");
+
+            const isSMA = document.getElementById('radioSMA').checked;
+            const sekolah = document.getElementById('pilihSekolah').value;
+            const areaHasil = document.getElementById('areaHasilPeluang');
+            
+            if(!sekolah) return alert("Pilih sekolah tujuan terlebih dahulu!");
+
+            let htmlHasil = `<div class="text-start mb-4"><h4 class="fw-bold text-dark"><i class="bi bi-building me-2"></i>${sekolah}</h4><hr></div>`;
+
+            if (isSMA) {
+                const minimal = dataPassingGrade.SMA[sekolah];
+                htmlHasil += buatCardHasil(skorAktifSiswa, minimal, "Jurusan Umum (SMA)");
+            } else {
+                const j1 = document.getElementById('jurusan1').value;
+                const j2 = document.getElementById('jurusan2').value;
+                const j3 = document.getElementById('jurusan3').value;
+
+                if(!j1 && !j2 && !j3) return alert("Pilih minimal 1 jurusan!");
+
+                if(j1) htmlHasil += buatCardHasil(skorAktifSiswa, dataPassingGrade.SMK[sekolah][j1], `Pilihan 1: ${j1}`);
+                if(j2) htmlHasil += buatCardHasil(skorAktifSiswa, dataPassingGrade.SMK[sekolah][j2], `Pilihan 2: ${j2}`);
+                if(j3) htmlHasil += buatCardHasil(skorAktifSiswa, dataPassingGrade.SMK[sekolah][j3], `Pilihan 3: ${j3}`);
+            }
+
+            areaHasil.innerHTML = htmlHasil;
+            areaHasil.classList.remove('py-5', 'text-muted', 'justify-content-center', 'align-items-center');
+            areaHasil.classList.add('p-4', 'text-start');
+        }
+
+        function buatCardHasil(skor, minimal, judul) {
+            skor = parseFloat(skor);
+            let selisih = (skor - minimal).toFixed(2);
+            let status, warna, icon;
+
+            if (skor >= minimal + 1.5) { status = "Aman (Peluang Besar)"; warna = "success"; icon = "check-circle-fill"; } 
+            else if (skor >= minimal) { status = "Waspada (Peluang Sedang)"; warna = "warning"; icon = "exclamation-triangle-fill"; } 
+            else { status = "Risiko (Peluang Kecil)"; warna = "danger"; icon = "x-circle-fill"; }
+
+            return `
+                <div class="card mb-4 result-card border-0 border-start border-5 border-${warna} shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark">${judul}</h5>
+                            <span class="badge bg-${warna} bg-opacity-10 text-${warna} border border-${warna} px-3 py-2 rounded-pill fs-6"><i class="bi bi-${icon} me-1"></i> ${status}</span>
+                        </div>
+                        <div class="row mt-3 bg-light p-3 rounded-3 g-2">
+                            <div class="col-6">
+                                <span class="small text-muted d-block">Skor Kamu</span>
+                                <span class="fs-4 fw-bold text-dark">${skor}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="small text-muted d-block">Passing Grade Minimal</span>
+                                <span class="fs-4 fw-bold text-dark">${minimal.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            ${selisih >= 0 ? 
+                                `<div class="alert alert-success py-2 mb-0 border-0 bg-success bg-opacity-10"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> Skor lebih <strong class="fs-6">+${selisih}</strong> dari batas aman.</div>` : 
+                                `<div class="alert alert-danger py-2 mb-0 border-0 bg-danger bg-opacity-10"><i class="bi bi-arrow-down-right-circle-fill me-1"></i> Skor kurang <strong class="fs-6">${selisih}</strong> dari batas aman.</div>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- FUNGSI EXPORT EXCEL ---
+        function downloadExcelNKA() {
+            let combinedData = [];
+            
+            // Gabungkan semua nama dari tabel rapor dan tka
+            let allNames = new Set([
+                ...dataRaporGlobal.map(d => d.nama_siswa),
+                ...dataTKAGlobal.map(d => d.nama_siswa)
+            ]);
+
+            let index = 1;
+            allNames.forEach(nama => {
+                let rapor = dataRaporGlobal.find(d => d.nama_siswa === nama);
+                let tka = dataTKAGlobal.find(d => d.nama_siswa === nama);
+                
+                let valRapor = rapor ? parseFloat(rapor.rata_rata) : 0;
+                let valTKA = tka ? parseFloat(tka.nilai_total) : 0;
+                let valNKA = (valRapor * 0.6) + (valTKA * 0.4);
+
+                combinedData.push({
+                    No: index++,
+                    Nama: nama,
+                    'Rerata Rapor': valRapor.toFixed(2),
+                    'Rerata TKA': valTKA.toFixed(2),
+                    'NKA': valNKA.toFixed(2)
+                });
+            });
+
+            // Siapkan Struktur Data Array to Array
+            const wsData = [
+                ["NILAI KEMAMPUAN AKADEMIK SISWA"],
+                ["SMP NEGERI 8 PROBOLINGGO"],
+                [], // Baris Kosong
+                ["No", "Nama", "Rerata Rapor", "Rerata TKA", "NKA"] // Header
+            ];
+            
+            combinedData.forEach(d => {
+                wsData.push([d.No, d.Nama, d['Rerata Rapor'], d['Rerata TKA'], d.NKA]);
+            });
+
+            // Buat Workbook dan Worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // GAYA/STYLING
+            // Judul
+            ws["A1"].s = { font: { bold: true, sz: 14 }, alignment: { horizontal: "center" } };
+            ws["A2"].s = { font: { bold: true, sz: 12 }, alignment: { horizontal: "center" } };
+            
+            // Merge Cells Judul
+            ws['!merges'] = [
+                { s: {r: 0, c: 0}, e: {r: 0, c: 4} }, // Merge A1:E1
+                { s: {r: 1, c: 0}, e: {r: 1, c: 4} }  // Merge A2:E2
+            ];
+
+            // Header Style (Warna Biru, Font Putih Bold)
+            const headerStyle = {
+                fill: { fgColor: { rgb: "FF0D6EFD" } },
+                font: { color: { rgb: "FFFFFFFF" }, bold: true },
+                alignment: { horizontal: "center", vertical: "center" },
+                border: {
+                    top: { style: "thin", color: { auto: 1 } },
+                    bottom: { style: "thin", color: { auto: 1 } },
+                    left: { style: "thin", color: { auto: 1 } },
+                    right: { style: "thin", color: { auto: 1 } }
+                }
+            };
+
+            const cols = ["A", "B", "C", "D", "E"];
+            cols.forEach(col => {
+                if(ws[col + "4"]) ws[col + "4"].s = headerStyle; // Baris ke-4 (Index row = 3)
+            });
+
+            // Lebar Kolom
+            ws['!cols'] = [
+                { wch: 5 },  // No
+                { wch: 30 }, // Nama
+                { wch: 15 }, // Rerata Rapor
+                { wch: 15 }, // Rerata TKA
+                { wch: 15 }  // NKA
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, "Data NKA");
+            XLSX.writeFile(wb, "Nilai_Kemampuan_Akademik_SMPN8_Probolinggo.xlsx");
+        }
+
+        // --- FITUR AUTOCOMPLETE PENCARIAN ---
+function setupAutocomplete(inputId, listId, isForSkor = true) {
+    const inputEl = document.getElementById(inputId);
+    const listEl = document.getElementById(listId);
+
+    inputEl.addEventListener('input', function() {
+        if(this.hasAttribute('readonly')) return;
+
+        const val = this.value.toLowerCase().trim();
+        listEl.innerHTML = '';
+        
+        if (!val) {
+            listEl.classList.add('d-none');
+            return;
+        }
+
+        // Ambil dari variabel data kamu yang sudah connect database
+        const semuaNama = [...new Set([...dataRaporGlobal.map(d=>d.nama_siswa), ...dataTKAGlobal.map(d=>d.nama_siswa)])];
+        const filterNama = semuaNama.filter(nama => nama.toLowerCase().includes(val));
+
+        if (filterNama.length > 0) {
+            listEl.classList.remove('d-none');
+            filterNama.forEach(nama => {
+                const li = document.createElement('li');
+                li.className = 'sugesti-item';
+                li.innerText = nama;
+                li.onclick = () => {
+                    inputEl.value = nama;
+                    listEl.classList.add('d-none');
+                    // Otomatis eksekusi pencarian pas diklik
+                    if(isForSkor) cariSkor(); else tarikSkorUntukPeluang();
+                };
+                listEl.appendChild(li);
+            });
+        } else {
+            listEl.classList.add('d-none');
+        }
+    });
+
+    // Hilangkan list saat klik area luar
+    document.addEventListener('click', function(e) {
+        if(!inputEl.contains(e.target) && !listEl.contains(e.target)) {
+            listEl.classList.add('d-none');
+        }
+    });
+}
+
+// Panggil fungsinya biar jalan
+setupAutocomplete('cariNamaSkor', 'sugestiNama', true);
+setupAutocomplete('namaSiswaPeluang', 'sugestiPeluang', false);
+
+function cariSkor() {
+    const inputEl = document.getElementById('cariNamaSkor');
+    const namaDicari = inputEl.value.toLowerCase().trim();
+    const emptyState = document.getElementById('emptyStateSkor');
+    const hasilDiv = document.getElementById('hasilSkor');
+
+    if(!namaDicari) return alert("Ketik nama siswa terlebih dahulu!");
+
+    const rapor = dataRaporGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+    const tka = dataTKAGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+
+    // MUNCULKAN EMPTY STATE JIKA TIDAK KETEMU
+    if (!rapor && !tka) {
+        hasilDiv.classList.add('d-none');      
+        emptyState.classList.remove('d-none'); 
+        return;
+    }
+
+    // JIKA KETEMU, SEMBUNYIKAN EMPTY STATE
+    emptyState.classList.add('d-none');
+
+    const nilaiRapor = rapor ? parseFloat(rapor.rata_rata) : 0;
+    const nilaiTKA = tka ? parseFloat(tka.nilai_total) : 0;
+    const skorAkhir = ((nilaiRapor * 0.6) + (nilaiTKA * 0.4)).toFixed(2); 
+
+    document.getElementById('resNamaSiswa').innerText = (rapor || tka).nama_siswa;
+    document.getElementById('resRapor').innerText = nilaiRapor;
+    document.getElementById('resTKA').innerText = nilaiTKA;
+    document.getElementById('resTotal').innerText = skorAkhir;
+    
+    hasilDiv.classList.remove('d-none'); 
+}
+
+function tarikSkorUntukPeluang() {
+    const namaDicari = document.getElementById('namaSiswaPeluang').value.toLowerCase().trim();
+    const errPesan = document.getElementById('errSkorPeluang');
+    const infoSkor = document.getElementById('infoSkorPeluang');
+
+    if(!namaDicari) return alert("Masukkan nama siswa!");
+
+    const rapor = dataRaporGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+    const tka = dataTKAGlobal.find(d => d.nama_siswa.toLowerCase() === namaDicari);
+
+    // MUNCULKAN ERROR JIKA TIDAK KETEMU
+    if (!rapor && !tka) {
+        infoSkor.classList.add('d-none');
+        errPesan.classList.remove('d-none'); 
+        skorAktifSiswa = 0;
+        return;
+    }
+
+    // JIKA KETEMU, SEMBUNYIKAN ERROR
+    errPesan.classList.add('d-none');
+
+    const nRapor = rapor ? parseFloat(rapor.rata_rata) : 0;
+    const nTKA = tka ? parseFloat(tka.nilai_total) : 0;
+    skorAktifSiswa = ((nRapor * 0.6) + (nTKA * 0.4)).toFixed(2);
+
+    infoSkor.classList.remove('d-none');
+    document.getElementById('skorAktifLabel').innerText = skorAktifSiswa;
+    document.getElementById('namaSiswaPeluang').value = (rapor || tka).nama_siswa; 
+}
+    </script>
+</body>
+</html>

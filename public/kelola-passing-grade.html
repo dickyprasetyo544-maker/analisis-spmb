@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Passing Grade - SPMB SMPN 8</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f4f7f6; }
+        .sidebar { width: 250px; height: 100vh; background: #1a237e; color: white; position: fixed; }
+        .sidebar-link { color: #cfd8dc; text-decoration: none; padding: 12px 20px; display: block; border-radius: 5px; margin-bottom: 5px; transition: 0.3s; }
+        .sidebar-link:hover, .sidebar-link.active { background: #3949ab; color: white; }
+        .main-content { margin-left: 250px; padding: 30px; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .table thead { background-color: #f8f9fa; }
+        .input-pg { width: 100px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar p-3">
+        <h4 class="text-center mb-4"><i class="bi bi-mortarboard-fill me-2"></i> SPMB SMPN 8</h4>
+        <div id="menuSidebar">
+            <a href="dashboard.html" class="sidebar-link"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
+            <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
+            <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
+            <a href="kelola-passing-grade.html" class="sidebar-link active"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
+        </div>
+        <hr>
+        <button class="btn btn-danger w-100 mt-3" onclick="logout()"><i class="bi bi-power me-2"></i> Keluar</button>
+    </div>
+
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Kelola Passing Grade</h3>
+            <div class="text-end">
+                <strong id="userName">Admin</strong><br>
+                <small class="text-muted">Administrator</small>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h5 class="mb-3 text-primary"><i class="bi bi-building me-2"></i> Passing Grade SMA</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Sekolah</th>
+                            <th>Peminatan</th>
+                            <th>Passing Grade</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableSMA">
+                        <tr><td colspan="5" class="text-center">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card p-4">
+            <h5 class="mb-3 text-success"><i class="bi bi-briefcase me-2"></i> Passing Grade SMK</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Sekolah</th>
+                            <th>Kompetensi Keahlian</th>
+                            <th>Passing Grade</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableSMK">
+                        <tr><td colspan="5" class="text-center">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ambil nama user dari LocalStorage
+        document.getElementById('userName').innerText = localStorage.getItem('nama') || 'Admin';
+
+        async function loadPG() {
+            try {
+                const res = await fetch('/api/passing-grade');
+                const result = await res.json();
+                
+                if (result.success) {
+                    const data = result.data;
+                    let htmlSMA = '';
+                    let htmlSMK = '';
+                    let noSMA = 1, noSMK = 1;
+
+                    data.forEach(item => {
+                        // Cek apakah SMA atau SMK (berdasarkan kolom peminatan/kompetensi)
+                        const row = `
+                            <tr>
+                                <td>${item.peminatan ? noSMA++ : noSMK++}</td>
+                                <td>${item.sekolah}</td>
+                                <td>${item.peminatan || item.kompetensi}</td>
+                                <td>
+                                    <input type="number" step="0.01" class="form-control input-pg" id="pg-${item.id}" value="${item.passing_grade}">
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="updatePG(${item.id})">
+                                        <i class="bi bi-save"></i> Simpan
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        
+                        if (item.peminatan) htmlSMA += row;
+                        else htmlSMK += row;
+                    });
+
+                    document.getElementById('tableSMA').innerHTML = htmlSMA || '<tr><td colspan="5">Data Kosong</td></tr>';
+                    document.getElementById('tableSMK').innerHTML = htmlSMK || '<tr><td colspan="5">Data Kosong</td></tr>';
+                }
+            } catch (e) {
+                alert('Gagal mengambil data: ' + e.message);
+            }
+        }
+
+        async function updatePG(id) {
+            const newValue = document.getElementById(`pg-${id}`).value;
+            
+            try {
+                const res = await fetch('/api/update-pg', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, passing_grade: newValue })
+                });
+                
+                const result = await res.json();
+                if (result.success) {
+                    alert('Berhasil diperbarui!');
+                } else {
+                    alert('Gagal update: ' + result.message);
+                }
+            } catch (e) {
+                alert('Error sistem!');
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Jalankan saat load
+        loadPG();
+    </script>
+</body>
+</html>
