@@ -5,6 +5,7 @@ const multer = require('multer');
 const xlsx = require('xlsx'); 
 
 const app = express();
+const router = express.Router(); // INI PENYELAMATNYA (ROUTER)
 
 // Konfigurasi Supabase dari Environment Variables
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -18,8 +19,10 @@ app.use(express.urlencoded({ extended: true }));
 // Konfigurasi Multer
 const upload = multer({ storage: multer.memoryStorage() });
 
-// --- API LOGIN ---
-app.post('/api/login', async (req, res) => {
+// --- SEMUA ROUTE SEKARANG MEMAKAI 'router' (Bukan 'app') DAN TANPA '/api' DI DEPANNYA ---
+
+// API LOGIN
+router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const { data, error } = await supabase
@@ -39,8 +42,8 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// --- API REGISTER ---
-app.post('/api/register', async (req, res) => {
+// API REGISTER
+router.post('/register', async (req, res) => {
     const { namaLengkap, username, password } = req.body;
     const { error } = await supabase
         .from('akun_spmb')
@@ -59,26 +62,26 @@ app.post('/api/register', async (req, res) => {
     res.json({ success: true, message: 'Berhasil! Tunggu konfirmasi admin.' });
 });
 
-// --- API ADMIN ---
-app.get('/api/pending-users', async (req, res) => {
+// API ADMIN
+router.get('/pending-users', async (req, res) => {
     const { data, error } = await supabase.from('akun_spmb').select('*').eq('status', 'pending');
     res.json({ success: !error, data: data });
 });
 
-app.post('/api/approve-user', async (req, res) => {
+router.post('/approve-user', async (req, res) => {
     const { username } = req.body;
     const { error } = await supabase.from('akun_spmb').update({ status: 'aktif' }).eq('username', username);
     res.json({ success: !error, message: error ? 'Gagal' : 'Akun disetujui!' });
 });
 
-app.post('/api/reject-user', async (req, res) => {
+router.post('/reject-user', async (req, res) => {
     const { username } = req.body;
     const { error } = await supabase.from('akun_spmb').delete().eq('username', username);
     res.json({ success: !error, message: error ? 'Gagal' : 'Akun ditolak!' });
 });
 
-// --- API EXCEL ---
-app.post('/api/upload-rapor', upload.single('file'), async (req, res) => {
+// API EXCEL
+router.post('/upload-rapor', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) return res.json({ success: false, message: 'File tidak ada!' });
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
@@ -91,7 +94,7 @@ app.post('/api/upload-rapor', upload.single('file'), async (req, res) => {
     }
 });
 
-app.post('/api/upload-tka', upload.single('file'), async (req, res) => {
+router.post('/upload-tka', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) return res.json({ success: false, message: 'File tidak ada!' });
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
@@ -104,23 +107,23 @@ app.post('/api/upload-tka', upload.single('file'), async (req, res) => {
     }
 });
 
-app.get('/api/data-rapor', async (req, res) => {
+// API AMBIL DATA
+router.get('/data-rapor', async (req, res) => {
     const { data, error } = await supabase.from('nilai_rapor').select('*');
     res.json({ success: !error, data: data });
 });
 
-app.get('/api/data-tka', async (req, res) => {
+router.get('/data-tka', async (req, res) => {
     const { data, error } = await supabase.from('nilai_tka').select('*');
     res.json({ success: !error, data: data });
 });
 
-app.get('/api/passing-grade', async (req, res) => {
+router.get('/passing-grade', async (req, res) => {
     const { data, error } = await supabase.from('passing_grade').select('*');
     res.json({ success: !error, data: data });
 });
 
-// Tambahkan API ini untuk update data passing grade
-app.post('/api/update-pg', async (req, res) => {
+router.post('/update-pg', async (req, res) => {
     const { id, passing_grade } = req.body;
     try {
         const { error } = await supabase
@@ -134,6 +137,10 @@ app.post('/api/update-pg', async (req, res) => {
         res.json({ success: false, message: err.message });
     }
 });
+
+// --- BAGIAN INI KUNCI UTAMA AGAR NETLIFY BISA BACA ---
+app.use('/api', router);
+app.use('/.netlify/functions/api', router); // Backup jalur asli Netlify Functions
 
 // EXPORT UNTUK NETLIFY
 module.exports.handler = serverless(app);
