@@ -1,11 +1,11 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
-const serverless = require('serverless-http'); // WAJIB ADA
+const serverless = require('serverless-http'); 
 const multer = require('multer'); 
 const xlsx = require('xlsx'); 
 
 const app = express();
-const router = express.Router(); // INI PENYELAMATNYA (ROUTER)
+const router = express.Router(); 
 
 // Konfigurasi Supabase dari Environment Variables
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -19,30 +19,62 @@ app.use(express.urlencoded({ extended: true }));
 // Konfigurasi Multer
 const upload = multer({ storage: multer.memoryStorage() });
 
-// --- SEMUA ROUTE SEKARANG MEMAKAI 'router' (Bukan 'app') DAN TANPA '/api' DI DEPANNYA ---
-
-// API LOGIN
+// --- API LOGIN (SUDAH DIPERBAIKI SESUAI DATABASE) ---
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const { data, error } = await supabase
+        // 1. Cek di tabel users_app dulu (Tempat Admin Utama berada sesuai screenshot)
+        let { data: adminData } = await supabase
+            .from('users_app')
+            .select('*')
+            .eq('username', username)
+            .eq('password', password)
+            .maybeSingle();
+
+        // Kalau ketemu sebagai Admin, langsung loloskan
+        if (adminData) {
+            return res.json({ 
+                success: true, 
+                message: 'Login Admin berhasil!', 
+                role: adminData.role, 
+                nama: adminData.nama_lengkap 
+            });
+        }
+
+        // 2. Kalau bukan Admin, coba cari di tabel akun_spmb (Tempat Guru/User biasa daftar)
+        const { data: userData, error: userError } = await supabase
             .from('akun_spmb')
             .select('*')
             .eq('username', username)
             .eq('password', password)
             .maybeSingle();
 
-        if (error) throw error;
-        if (!data) return res.json({ success: false, message: 'Username atau password salah!' });
-        if (data.status === 'pending') return res.json({ success: false, message: 'Akun belum aktif!' });
+        if (userError) throw userError;
 
-        res.json({ success: true, message: 'Login berhasil!', role: data.role, nama: data.nama_lengkap });
+        // Kalau di kedua tabel sama sekali nggak ada
+        if (!userData) {
+            return res.json({ success: false, message: 'Username atau password salah!' });
+        }
+
+        // Kalau ada di akun_spmb tapi belum disetujui admin
+        if (userData.status === 'pending') {
+            return res.json({ success: false, message: 'Akun belum aktif! Tunggu konfirmasi admin.' });
+        }
+
+        // Kalau berhasil login sebagai user biasa
+        res.json({ 
+            success: true, 
+            message: 'Login berhasil!', 
+            role: userData.role, 
+            nama: userData.nama_lengkap 
+        });
+
     } catch (err) {
         res.json({ success: false, message: 'Kesalahan Server: ' + err.message });
     }
 });
 
-// API REGISTER
+// --- API REGISTER ---
 router.post('/register', async (req, res) => {
     const { namaLengkap, username, password } = req.body;
     const { error } = await supabase
@@ -62,7 +94,7 @@ router.post('/register', async (req, res) => {
     res.json({ success: true, message: 'Berhasil! Tunggu konfirmasi admin.' });
 });
 
-// API ADMIN
+// --- API ADMIN ---
 router.get('/pending-users', async (req, res) => {
     const { data, error } = await supabase.from('akun_spmb').select('*').eq('status', 'pending');
     res.json({ success: !error, data: data });
@@ -80,7 +112,7 @@ router.post('/reject-user', async (req, res) => {
     res.json({ success: !error, message: error ? 'Gagal' : 'Akun ditolak!' });
 });
 
-// API EXCEL
+// --- API EXCEL ---
 router.post('/upload-rapor', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) return res.json({ success: false, message: 'File tidak ada!' });
@@ -107,7 +139,7 @@ router.post('/upload-tka', upload.single('file'), async (req, res) => {
     }
 });
 
-// API AMBIL DATA
+// --- API AMBIL DATA ---
 router.get('/data-rapor', async (req, res) => {
     const { data, error } = await supabase.from('nilai_rapor').select('*');
     res.json({ success: !error, data: data });
@@ -138,9 +170,9 @@ router.post('/update-pg', async (req, res) => {
     }
 });
 
-// --- BAGIAN INI KUNCI UTAMA AGAR NETLIFY BISA BACA ---
+// Routing wajib Netlify
 app.use('/api', router);
-app.use('/.netlify/functions/api', router); // Backup jalur asli Netlify Functions
+app.use('/.netlify/functions/api', router); 
 
 // EXPORT UNTUK NETLIFY
 module.exports.handler = serverless(app);
