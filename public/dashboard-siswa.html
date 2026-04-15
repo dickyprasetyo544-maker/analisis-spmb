@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - SPMB SMPN 8 Probolinggo</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -16,15 +17,23 @@
             overflow-x: hidden;
         }
         
-        #wrapper { display: flex; width: 100vw; height: 100vh; }
+        /* Mencegah scroll ganda di layar utama */
+        #wrapper { 
+            display: flex; 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
         
         /* Sidebar Mewah */
         #sidebar-wrapper {
             width: 260px;
             flex-shrink: 0;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
             z-index: 1050;
+            display: flex;
+            flex-direction: column;
         }
         
         #page-content-wrapper {
@@ -64,16 +73,88 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.06);
         }
 
-        /* Custom Scrollbar untuk Tabel Admin */
-        .table-container { 
-            max-height: 400px; 
-            overflow-y: auto; 
-            border-radius: 12px;
+        /* Overlay Gelap untuk HP */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(3px);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
-        .table-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 8px; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* === GAYA TOMBOL MENGAMBANG === */
+        .float-wa {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0px 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1060;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: pulse-wa 2s infinite;
+        }
+
+        .float-info {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 105px; /* Ditumpuk di atas WA */
+            right: 30px;
+            background-color: #3b82f6; /* Warna biru */
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 26px;
+            box-shadow: 0px 4px 15px rgba(59, 130, 246, 0.4);
+            z-index: 1060;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .float-wa:hover, .float-info:hover {
+            color: #FFF;
+            transform: scale(1.1) translateY(-5px);
+        }
+        
+        .float-info:hover {
+            background-color: #2563eb;
+            box-shadow: 0px 8px 25px rgba(37, 99, 235, 0.6);
+        }
+
+        /* Animasi Berdenyut (Pulse) WA */
+        @keyframes pulse-wa {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Styling tambahan dropdown Pusat Info */
+        .dropdown-menu-custom .dropdown-item {
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .dropdown-menu-custom .dropdown-item:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            transform: translateX(3px);
+        }
 
         /* Responsif HP */
         @media (max-width: 768px) {
@@ -86,9 +167,25 @@
                 margin-left: 0;
                 box-shadow: 10px 0 30px rgba(0,0,0,0.2);
             }
-            #wrapper.toggled::after {
-                content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.5); z-index: 1040;
+            #wrapper.toggled #overlay {
+                display: block;
+                opacity: 1;
+            }
+            .container-fluid {
+                padding: 1.5rem !important; 
+            }
+            
+            /* Penyesuaian ukuran tombol melayang di HP */
+            .float-wa {
+                width: 50px; height: 50px;
+                bottom: 20px; right: 20px;
+                font-size: 26px;
+            }
+            .float-info {
+                width: 50px; height: 50px;
+                bottom: 85px;
+                right: 20px;
+                font-size: 22px;
             }
         }
     </style>
@@ -96,17 +193,26 @@
 <body>
 
     <div id="wrapper">
+        <div id="overlay"></div>
+
         <div class="text-white shadow-lg" id="sidebar-wrapper">
-            <div class="p-4 fw-bold fs-5 border-bottom border-secondary text-center text-white" style="letter-spacing: 1px;">
+            <div class="p-4 fw-bold fs-5 border-bottom border-secondary border-opacity-25 text-center text-white" style="letter-spacing: 1px;">
                 🎓 SPMB SMPN 8
             </div>
-            <div class="mt-4" id="menuSidebar">
-    <a href="dashboard.html" class="sidebar-link active"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
-    <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
-    <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
-    
-    <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
-</div>
+            
+            <div class="mt-4 flex-grow-1" id="menuSidebar">
+                <a href="dashboard.html" class="sidebar-link active"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
+                <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
+                <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
+                
+                <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
+            </div>
+
+            <div class="mt-auto p-3 text-center border-top border-secondary border-opacity-25" style="font-size: 0.8rem; color: #94a3b8;">
+                <i class="bi bi-code-square mb-1 fs-5 text-primary opacity-75"></i><br>
+                Aplikasi ini dibuat oleh<br>
+                <span class="text-white fw-bold">Dhickz666</span>
+            </div>
         </div>
 
         <div id="page-content-wrapper">
@@ -125,8 +231,8 @@
                             <span class="text-dark fw-bold d-block" id="welcomeText" style="line-height: 1;">User</span>
                             <small class="text-muted" id="roleText">Siswa</small>
                         </div>
-                        <button class="btn btn-danger btn-sm rounded-pill fw-bold px-3 shadow-sm" onclick="logout()">
-                            <i class="bi bi-power"></i> <span class="d-none d-md-inline">Keluar</span>
+                        <button class="btn btn-danger btn-sm rounded-pill fw-bold px-3 py-2 shadow-sm d-flex align-items-center" onclick="logout()">
+                            <i class="bi bi-power me-md-1"></i> <span class="d-none d-md-inline">Keluar</span>
                         </button>
                     </div>
                 </div>
@@ -145,47 +251,75 @@
                                 <p class="text-muted mb-0 fs-6">Selamat datang di sistem Seleksi Penerimaan Mahasiswa Baru.</p>
                             </div>
                         </div>
-                        <hr class="text-muted opacity-10">
-                        <div class="bg-light border border-secondary border-opacity-10 text-center py-5 rounded-4 mt-4 shadow-sm">
-                            <i class="bi bi-journal-text text-primary opacity-50" style="font-size: 4rem;"></i>
-                            <h5 class="mt-3 fw-bold text-dark">Petunjuk Teknis Belum Tersedia</h5>
-                            <p class="text-muted mb-0 px-3">Rangkuman petunjuk teknis dan informasi umum pendaftaran akan segera diperbarui oleh Administrator.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="adminPanel" class="card card-premium mb-4 border-start border-warning border-5 d-none">
-                    <div class="card-body p-4 p-md-5">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-warning bg-opacity-25 text-warning rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="bi bi-bell-fill fs-4"></i>
-                                </div>
-                                <h5 class="fw-bold mb-0 text-dark">Antrean Persetujuan Akun</h5>
-                            </div>
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill shadow-sm" onclick="loadPendingUsers()">
-                                <i class="bi bi-arrow-clockwise"></i> Refresh
-                            </button>
-                        </div>
+                        <hr class="text-muted opacity-10 mb-4">
                         
-                        <div class="table-responsive table-container border border-secondary border-opacity-10 shadow-sm">
-                            <table class="table table-hover bg-white text-center align-middle mb-0">
-                                <thead class="table-light text-secondary sticky-top">
-                                    <tr>
-                                        <th class="py-3 text-start ps-4">Nama Lengkap</th>
-                                        <th class="py-3 text-start">Username</th>
-                                        <th class="py-3">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelPending">
-                                    <tr>
-                                        <td colspan="3" class="text-muted py-5 text-center">
-                                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-                                            Memuat data...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="position-relative ms-3 border-start border-2 border-primary border-opacity-25 pb-1 mt-4">
+                            
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 11 - 12 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 1: Domisili</h5>
+                                <p class="text-muted small mb-2"><i class="bi bi-info-circle me-1"></i>Penentuan kuota berdasarkan rayon tiap sekolah.</p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill"><i class="bi bi-building me-1"></i> Kuota SMA: 35%</span>
+                                    <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-tools me-1"></i> Kuota SMK: 10%</span>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 17 - 18 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-3">Tahap 2: Afirmasi, Mutasi & Prestasi Lomba</h5>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Jalur Afirmasi</span>
+                                            <div class="d-flex flex-column gap-1">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 text-start">SMA: 30%</span>
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 text-start">SMK: 15%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Mutasi Orang Tua</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 text-start w-100">SMA/SMK: 5%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Prestasi Hasil Lomba</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 text-start w-100">SMA/SMK: 5%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 24 - 25 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 3: Prestasi Akademik SMA</h5>
+                                <div class="d-flex gap-2 mt-2">
+                                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill"><i class="bi bi-building me-1"></i> Kuota SMA: 25%</span>
+                                </div>
+                            </div>
+
+                            <div class="position-relative ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 30 Juni - 1 Juli
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 4: Prestasi Akademik SMK</h5>
+                                <div class="d-flex gap-2 mt-2">
+                                    <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-tools me-1"></i> Kuota SMK: 65%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,25 +328,45 @@
         </div>
     </div>
 
+    <div class="dropup">
+        <button class="float-info shadow-lg" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Pusat Informasi">
+            <i class="bi bi-journal-bookmark-fill"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-4 mb-3 p-2" style="min-width: 250px;">
+            <li><h6 class="dropdown-header fw-bold text-dark"><i class="bi bi-info-circle me-1"></i> PUSAT INFORMASI</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="ambilpin.html"><i class="bi bi-key text-warning me-2 fs-5"></i> Tata Cara Ambil PIN</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="kriteria.html"><i class="bi bi-sort-numeric-up text-info me-2 fs-5"></i> Kriteria Pemeringkatan</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="jadwal.html"><i class="bi bi-calendar-check text-primary me-2 fs-5"></i> Jadwal Lengkap SPMB</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item py-2 rounded-3 fw-bold text-success d-flex align-items-center" href="juknis.pdf" download>
+                    <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i> Unduh Juknis 2026
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <a href="https://wa.me/6282231520574?text=Pak%20Dicky%20saya%20ingin%20tanya%20terkait%20pendaftaran%20SPMB" class="float-wa" target="_blank" title="Hubungi Bantuan">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // --- 1. TOGGLE SIDEBAR UNTUK HP ---
+        const wrapper = document.getElementById("wrapper");
+        const overlay = document.getElementById("overlay");
+        
         document.getElementById("menu-toggle").addEventListener("click", function(e) {
             e.preventDefault();
-            document.getElementById("wrapper").classList.toggle("toggled");
+            wrapper.classList.toggle("toggled");
         });
 
-        document.addEventListener('click', function(event) {
-            const wrapper = document.getElementById('wrapper');
-            const isClickInsideSidebar = document.getElementById('sidebar-wrapper').contains(event.target);
-            const isClickToggle = document.getElementById('menu-toggle').contains(event.target);
-
-            if (wrapper.classList.contains('toggled') && !isClickInsideSidebar && !isClickToggle) {
-                wrapper.classList.remove('toggled');
-            }
+        overlay.addEventListener("click", function() {
+            wrapper.classList.remove("toggled");
         });
 
-        // --- 2. CEK LOGIN & KEAMANAN ROLE ---
+        // --- 2. CEK LOGIN & ROLE SEDERHANA ---
         const userName = localStorage.getItem('userName');
         const userRole = localStorage.getItem('userRole');
 
@@ -220,100 +374,21 @@
             window.location.href = 'index.html';
         }
 
-        // Tulis nama di Navbar
         document.getElementById('welcomeText').innerText = userName;
 
         if (userRole === 'admin') {
             document.getElementById('roleText').innerText = 'Administrator';
             document.getElementById('roleText').classList.replace('text-muted', 'text-danger');
-            
-            // Munculkan menu admin dan ambil data pending
-            document.getElementById('adminPanel').classList.remove('d-none');
+            // Menampilkan menu kelola jika admin (opsional)
             document.getElementById('menuAdminPG').classList.remove('d-none');
-            loadPendingUsers(); 
         } else {
-            // KEAMANAN: Jika bukan admin, hapus elemen dari DOM secara total
-            const adminPanel = document.getElementById('adminPanel');
-            if(adminPanel) {
-                adminPanel.remove(); 
-            }
+            document.getElementById('roleText').innerText = 'Siswa';
         }
 
         // --- 3. FUNGSI LOGOUT ---
         function logout() {
             localStorage.clear(); 
             window.location.href = 'index.html'; 
-        }
-
-        // --- 4. FUNGSI-FUNGSI KHUSUS ADMIN ---
-        async function loadPendingUsers() {
-            const tbody = document.getElementById('tabelPending');
-            // Tampilkan loading state
-            tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5"><div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>Memuat data...</td></tr>`;
-            
-            try {
-                const response = await fetch('/api/pending-users');
-                const result = await response.json();
-                tbody.innerHTML = ''; 
-
-                if (result.success && result.data.length > 0) {
-                    result.data.forEach(user => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td class="fw-semibold text-dark text-start ps-4">${user.nama_lengkap}</td>
-                                <td class="text-secondary text-start">
-                                    <span class="badge bg-light text-dark border border-secondary border-opacity-25 py-2 px-3 rounded-pill">
-                                        @${user.username}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-success btn-sm m-1 rounded-pill px-3 shadow-sm fw-semibold" onclick="approveUser('${user.username}')">
-                                        <i class="bi bi-check-lg me-1"></i> Setujui
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm m-1 rounded-pill px-3 fw-semibold" onclick="rejectUser('${user.username}')">
-                                        <i class="bi bi-x-lg me-1"></i> Tolak
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5"><i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i> Tidak ada antrean pengajuan akun saat ini.</td></tr>`;
-                }
-            } catch (error) {
-                console.error("Gagal mengambil data antrean:", error);
-                tbody.innerHTML = `<tr><td colspan="3" class="text-danger py-5"><i class="bi bi-exclamation-triangle fs-2 d-block mb-2"></i> Gagal memuat data. Cek koneksi server.</td></tr>`;
-            }
-        }
-
-        async function approveUser(username) {
-            if(confirm(`Yakin ingin menyetujui akun @${username}?`)) {
-                try {
-                    await fetch('/api/approve-user', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username: username })
-                    });
-                    loadPendingUsers(); 
-                } catch (error) {
-                    alert('Gagal menyetujui akun. Cek koneksi server.');
-                }
-            }
-        }
-
-        async function rejectUser(username) {
-            if(confirm(`Yakin ingin menolak dan menghapus pengajuan @${username}?`)) {
-                try {
-                    await fetch('/api/reject-user', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username: username })
-                    });
-                    loadPendingUsers(); 
-                } catch (error) {
-                    alert('Gagal menolak akun. Cek koneksi server.');
-                }
-            }
         }
     </script>
 </body>

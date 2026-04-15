@@ -3,24 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisis Peluang - SMPN 8</title>
+    <title>Analisis Peluang - SPMB SMPN 8</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9fa; }
-        
-        /* Sidebar Styling */
-        #wrapper { display: flex; width: 100%; align-items: stretch; }
-        #sidebar-wrapper {
-            min-width: 280px; max-width: 280px; min-height: 100vh;
-            background: #0d6efd; transition: all 0.3s;
+    <script>
+        if (!localStorage.getItem('isLoggedIn')) {
+            alert("Eits, ketahuan! Silakan login terlebih dahulu ya. 🔒");
+            window.location.replace("index.html");
         }
+    </script>
+
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8f9fa; 
+            overflow-x: hidden;
+        }
+        
+        /* Mencegah scroll ganda */
+        #wrapper { 
+            display: flex; 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        /* Sidebar Styling & Flexbox */
+        #sidebar-wrapper {
+            width: 280px; 
+            flex-shrink: 0;
+            background: #0d6efd; 
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column; 
+        }
+        
+        .page-content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+            background-color: #f8f9fa;
+        }
+
         .sidebar-link {
             padding: 12px 25px; display: block; color: rgba(255,255,255,0.8);
             text-decoration: none; transition: 0.3s; margin: 5px 15px; border-radius: 10px;
         }
+        
         .sidebar-link:hover, .sidebar-link.active {
             background: rgba(255,255,255,0.2); color: white; font-weight: 600;
         }
@@ -38,30 +70,76 @@
         .score-circle {
             width: 150px; height: 150px; border-radius: 50%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin: 0 auto; border: 8px solid #eee;
+            margin: 0 auto; border: 8px solid #eee; background-color: #fff;
         }
-        .badge-peluang { padding: 10px 20px; border-radius: 50px; font-weight: 700; font-size: 1.1rem; }
+        
+        /* Overlay Gelap untuk HP */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Responsif HP */
+        @media (max-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: -280px;
+                position: fixed;
+                height: 100vh;
+            }
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: 0;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            }
+            #wrapper.toggled #overlay {
+                display: block;
+                opacity: 1;
+            }
+            .container-fluid {
+                padding: 1.5rem !important;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div id="wrapper">
+    <div id="overlay"></div>
+
     <div class="text-white shadow-lg" id="sidebar-wrapper">
         <div class="p-4 fw-bold fs-5 border-bottom border-white border-opacity-25 text-center">
             🎓 SPMB SISWA
         </div>
-        <div class="mt-4">
+        
+        <div class="mt-4 flex-grow-1">
             <a href="dashboard-siswa.html" class="sidebar-link"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
             <a href="hitung-peluang.html" class="sidebar-link active"><i class="bi bi-calculator-fill me-2"></i> Hitung Peluang</a>
-            <div style="margin-top: 100px;">
+            <div class="mt-4">
                 <a href="#" onclick="logout()" class="sidebar-link text-warning"><i class="bi bi-power me-2"></i> Keluar</a>
             </div>
         </div>
+
+        <div class="mt-auto p-3 text-center border-top border-white border-opacity-25" style="font-size: 0.8rem; color: rgba(255,255,255,0.8);">
+            <i class="bi bi-code-square mb-1 fs-5 text-warning opacity-75"></i><br>
+            Aplikasi ini dibuat oleh<br>
+            <span class="text-white fw-bold">Dhickz666</span>
+        </div>
     </div>
 
-    <div class="w-100">
-        <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3">
-            <h5 class="mb-0 fw-bold text-primary">Simulasi Peluang Lanjut Sekolah</h5>
+    <div class="page-content-wrapper w-100">
+        
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 sticky-top">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light d-md-none border-0 shadow-sm" id="menu-toggle">
+                    <i class="bi bi-list fs-4 text-primary"></i>
+                </button>
+                <h5 class="mb-0 fw-bold text-primary">Simulasi Peluang Lanjut Sekolah</h5>
+            </div>
         </nav>
 
         <div class="container-fluid p-4 p-md-5">
@@ -72,34 +150,76 @@
                         
                         <div class="mb-3">
                             <label class="form-label small fw-bold text-muted">Rata-rata Rapor (Smt 1-5)</label>
-                            <input type="number" id="rapor" class="form-control form-control-lg border-light bg-light" placeholder="0.00">
+                            <input type="number" id="rapor" class="form-control form-control-lg border-light bg-light" placeholder="Contoh: 85.5">
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted">Rata-rata Nilai TKA</label>
-                            <input type="number" id="tka" class="form-control form-control-lg border-light bg-light" placeholder="0.00">
+                            <input type="number" id="tka" class="form-control form-control-lg border-light bg-light" placeholder="Contoh: 80.0">
                         </div>
 
                         <hr class="my-4 opacity-50">
 
-                        <h4 class="fw-bold mb-3 text-dark">Sekolah Tujuan</h4>
+                        <h4 class="fw-bold mb-3 text-dark">Pilihan Sekolah Tujuan</h4>
                         
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-muted">Pilih Jenjang</label>
-                            <div class="d-flex gap-2">
-                                <input type="radio" class="btn-check" name="jenjang" id="sma" value="SMA" checked onchange="loadSekolah()">
-                                <label class="btn btn-outline-primary w-100 fw-bold" for="sma">SMA</label>
-                                
-                                <input type="radio" class="btn-check" name="jenjang" id="smk" value="SMK" onchange="loadSekolah()">
-                                <label class="btn btn-outline-primary w-100 fw-bold" for="smk">SMK</label>
+                        <div class="card mb-3 border-primary shadow-sm rounded-4">
+                            <div class="card-body p-3">
+                                <span class="badge bg-primary mb-2">Pilihan 1 (Prioritas) *</span>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <select class="form-select bg-light border-0" id="jenjang1" onchange="filterSekolah(1)">
+                                            <option value="">Jenjang</option>
+                                            <option value="SMA">SMA</option>
+                                            <option value="SMK">SMK</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <select class="form-select bg-light border-0" id="sekolah1">
+                                            <option value="">-- Pilih Sekolah --</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="form-label small fw-bold text-muted">Nama Sekolah</label>
-                            <select id="selectSekolah" class="form-select form-select-lg border-light bg-light">
-                                <option value="">-- Memuat Data Sekolah... --</option>
-                            </select>
+                        <div class="card mb-3 shadow-sm rounded-4 bg-light border-0">
+                            <div class="card-body p-3">
+                                <span class="badge bg-secondary mb-2">Pilihan 2 (Opsional)</span>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <select class="form-select bg-white border-light" id="jenjang2" onchange="filterSekolah(2)">
+                                            <option value="">Jenjang</option>
+                                            <option value="SMA">SMA</option>
+                                            <option value="SMK">SMK</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <select class="form-select bg-white border-light" id="sekolah2">
+                                            <option value="">-- Pilih Sekolah --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4 shadow-sm rounded-4 bg-light border-0">
+                            <div class="card-body p-3">
+                                <span class="badge bg-secondary mb-2">Pilihan 3 (Opsional)</span>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <select class="form-select bg-white border-light" id="jenjang3" onchange="filterSekolah(3)">
+                                            <option value="">Jenjang</option>
+                                            <option value="SMA">SMA</option>
+                                            <option value="SMK">SMK</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <select class="form-select bg-white border-light" id="sekolah3">
+                                            <option value="">-- Pilih Sekolah --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <button onclick="hitungNKA()" class="btn btn-primary btn-hitung w-100 shadow">
@@ -114,24 +234,15 @@
                         <h5 class="text-muted mt-3">Hasil analisis akan muncul di sini <br>setelah kamu mengisi data.</h5>
                     </div>
 
-                    <div id="hasilAnalisis" class="card card-premium p-5 text-center">
+                    <div id="hasilAnalisis" class="card card-premium p-4 p-md-5 text-center">
                         <h5 class="text-muted fw-bold mb-4 uppercase tracking-wider">HASIL ANALISIS AKADEMIK</h5>
                         
-                        <div class="score-circle mb-3" id="lingkaranSkor">
+                        <div class="score-circle mb-4 shadow-sm" id="lingkaranSkor">
                             <small class="text-muted fw-bold">SKOR NKA</small>
                             <h1 class="display-4 fw-bold mb-0 text-primary" id="resNKA">00.0</h1>
                         </div>
 
-                        <div class="my-4">
-                            <h3 class="fw-bold text-dark" id="resSekolah">-</h3>
-                            <p class="text-muted">Passing Grade: <span id="resPG" class="fw-bold">00.00</span></p>
-                        </div>
-
-                        <div id="boxPeluang" class="p-4 rounded-4 bg-light">
-                            <p class="mb-2 text-muted fw-bold uppercase">Peluang Diterima:</p>
-                            <span id="labelPeluang" class="badge-peluang">-</span>
-                            <p class="mt-3 mb-0 text-dark italic" id="pesanSaran"></p>
-                        </div>
+                        <div id="containerPilihan" class="mt-2"></div>
                         
                         <button class="btn btn-link text-muted mt-4 text-decoration-none" onclick="window.print()">
                             <i class="bi bi-printer me-1"></i> Cetak Hasil Simulasi
@@ -144,92 +255,140 @@
 </div>
 
 <script>
+    // --- 1. TOGGLE SIDEBAR UNTUK HP ---
+    const wrapper = document.getElementById("wrapper");
+    const overlay = document.getElementById("overlay");
+    
+    document.getElementById("menu-toggle").addEventListener("click", function(e) {
+        e.preventDefault();
+        wrapper.classList.toggle("toggled");
+    });
+
+    overlay.addEventListener("click", function() {
+        wrapper.classList.remove("toggled");
+    });
+
+    // --- 2. LOGIKA APLIKASI (Diperbarui untuk 3 Pilihan) ---
     let masterDataPG = [];
 
-    // 1. Ambil data dari API passing-grade milikmu
-    async function loadSekolah() {
-        const select = document.getElementById('selectSekolah');
-        const jenjangDipilih = document.querySelector('input[name="jenjang"]:checked').value;
-        
-        select.innerHTML = '<option value="">-- Memuat... --</option>';
-
+    // Mengambil data dari API cukup 1 kali saat halaman diload
+    async function initData() {
         try {
-            // Memanggil endpoint dari api.js kamu di Netlify
             const response = await fetch('/.netlify/functions/api/passing-grade');
             const result = await response.json();
-
             if (result.success) {
                 masterDataPG = result.data;
-                
-                // Filter berdasarkan SMA/SMK
-                const filtered = masterDataPG.filter(item => item.jenjang === jenjangDipilih);
-                
-                select.innerHTML = '<option value="">-- Pilih Sekolah Tujuan --</option>';
-                filtered.forEach(item => {
-                    const namaFull = item.jurusan !== 'Umum' ? `${item.nama_sekolah} - ${item.jurusan}` : item.nama_sekolah;
-                    select.innerHTML += `<option value="${item.passing_grade}" data-nama="${namaFull}">${namaFull}</option>`;
-                });
             }
         } catch (error) {
             console.error("Gagal ambil data PG:", error);
-            select.innerHTML = '<option value="">Gagal memuat data</option>';
+            // Opsional: alert kalau server mati
+            // alert("Gagal memuat data sekolah. Pastikan koneksi server aman.");
         }
     }
 
-    // 2. Logika Hitung NKA (60% Rapor + 40% TKA)
-    function hitungNKA() {
-        const nr = parseFloat(document.getElementById('rapor').value) || 0;
-        const nt = parseFloat(document.getElementById('tka').value) || 0;
-        const select = document.getElementById('selectSekolah');
-        const pg = parseFloat(select.value) || 0;
-        const namaSekolah = select.options[select.selectedIndex].getAttribute('data-nama');
+    // Fungsi untuk memfilter dropdown sekolah berdasarkan jenjang yang dipilih per card
+    function filterSekolah(nomorPilihan) {
+        const jenjang = document.getElementById(`jenjang${nomorPilihan}`).value;
+        const selectSekolah = document.getElementById(`sekolah${nomorPilihan}`);
+        
+        selectSekolah.innerHTML = '<option value="">-- Pilih Sekolah --</option>';
+        
+        if (!jenjang) return; // Jika jenjang dikosongkan, stop proses
 
-        if (nr === 0 || nt === 0 || pg === 0) {
-            alert("Harap isi nilai dan pilih sekolah tujuan!");
+        const filtered = masterDataPG.filter(item => item.jenjang === jenjang);
+        filtered.forEach(item => {
+            const namaFull = item.jurusan !== 'Umum' ? `${item.nama_sekolah} - ${item.jurusan}` : item.nama_sekolah;
+            selectSekolah.innerHTML += `<option value="${item.passing_grade}" data-nama="${namaFull}">${namaFull}</option>`;
+        });
+    }
+
+    // Fungsi utama tombol "Analisis Sekarang"
+    function hitungNKA() {
+        const nr = parseFloat(document.getElementById('rapor').value);
+        const nt = parseFloat(document.getElementById('tka').value);
+        
+        const sel1 = document.getElementById('sekolah1');
+        const sel2 = document.getElementById('sekolah2');
+        const sel3 = document.getElementById('sekolah3');
+
+        // Validasi ketat untuk Rapor, TKA, dan Pilihan 1
+        if (isNaN(nr) || isNaN(nt)) {
+            alert("Harap isi nilai Rapor dan TKA terlebih dahulu dengan angka!");
             return;
         }
 
-        // Rumus NKA
+        if (sel1.value === "") {
+            alert("Harap pilih Sekolah Tujuan untuk Pilihan 1 (Prioritas)!");
+            return;
+        }
+
+        // Hitung Skor Akhir (NKA)
         const nka = (nr * 0.6) + (nt * 0.4);
 
-        // Update UI
+        // Tampilkan Box Hasil UI
         document.getElementById('placeholderHasil').classList.add('d-none');
         document.getElementById('hasilAnalisis').style.display = 'block';
         document.getElementById('resNKA').innerText = nka.toFixed(2);
-        document.getElementById('resSekolah').innerText = namaSekolah;
-        document.getElementById('resPG').innerText = pg.toFixed(2);
+        document.getElementById('lingkaranSkor').style.borderColor = "#0d6efd";
 
-        // Analisis Peluang
-        const label = document.getElementById('labelPeluang');
-        const saran = document.getElementById('pesanSaran');
-        const lingkaran = document.getElementById('lingkaranSkor');
+        // Generate HTML untuk masing-masing Pilihan
+        let htmlPilihan = '';
+        
+        htmlPilihan += generateCardPeluang(1, sel1, nka);
+        if (sel2.value !== "") htmlPilihan += generateCardPeluang(2, sel2, nka);
+        if (sel3.value !== "") htmlPilihan += generateCardPeluang(3, sel3, nka);
 
-        if (nka >= pg) {
-            label.innerText = "PELUANG TINGGI";
-            label.className = "badge-peluang bg-success text-white";
-            saran.innerText = "Selamat! Nilai kamu berada di atas Passing Grade. Peluang kamu untuk lolos sangat besar.";
-            lingkaran.style.borderColor = "#198754";
-        } else if (nka >= (pg - 2)) {
-            label.innerText = "PELUANG SEDANG";
-            label.className = "badge-peluang bg-warning text-dark";
-            saran.innerText = "Nilai kamu mendekati Passing Grade. Masih ada peluang, namun disarankan tetap mencari cadangan sekolah lain.";
-            lingkaran.style.borderColor = "#ffc107";
+        // Lempar HTML ke Container
+        document.getElementById('containerPilihan').innerHTML = htmlPilihan;
+    }
+
+    // Fungsi tambahan untuk mencetak Card Hasil Analisis
+    function generateCardPeluang(nomor, selectElement, nkaScore) {
+        const pg = parseFloat(selectElement.value);
+        const namaSekolah = selectElement.options[selectElement.selectedIndex].getAttribute('data-nama');
+        
+        let labelPeluang = "";
+        let badgeColor = "";
+        let saran = "";
+
+        if (nkaScore >= pg) {
+            labelPeluang = "PELUANG TINGGI";
+            badgeColor = "bg-success";
+            saran = "Nilai kamu cukup aman karena berada di atas batas rata-rata tahun lalu.";
+        } else if (nkaScore >= (pg - 2)) {
+            labelPeluang = "PELUANG SEDANG";
+            badgeColor = "bg-warning text-dark";
+            saran = "Mendekati nilai lolos. Tetap ada peluang, namun cukup bersaing ketat.";
         } else {
-            label.innerText = "PELUANG RENDAH";
-            label.className = "badge-peluang bg-danger text-white";
-            saran.innerText = "Maaf, nilai kamu cukup jauh dari Passing Grade tahun lalu. Disarankan untuk memilih sekolah dengan PG yang lebih rendah.";
-            lingkaran.style.borderColor = "#dc3545";
+            labelPeluang = "PELUANG RENDAH";
+            badgeColor = "bg-danger";
+            saran = "Berisiko tinggi. Nilaimu cukup jauh di bawah rata-rata tahun lalu.";
         }
+
+        return `
+            <div class="card mb-3 text-start border-0 shadow-sm bg-light" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <span class="badge bg-secondary mb-2">Pilihan ${nomor}</span>
+                    <h5 class="fw-bold text-dark mb-1">${namaSekolah}</h5>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between mt-2 gap-2">
+                        <span class="text-muted small">Passing Grade: <strong>${pg.toFixed(2)}</strong></span>
+                        <span class="badge px-3 py-2 rounded-pill ${badgeColor}">${labelPeluang}</span>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0 fst-italic">"${saran}"</p>
+                </div>
+            </div>
+        `;
     }
 
     function logout() {
         if(confirm('Apakah anda yakin ingin keluar?')) {
+            localStorage.removeItem('isLoggedIn'); // Jangan lupa hapus session!
             window.location.href = 'index.html';
         }
     }
 
-    // Jalankan load data saat halaman siap
-    window.onload = loadSekolah;
+    // Eksekusi fungsi Init Data saat web pertama kali termuat
+    window.onload = initData;
 </script>
 
 </body>

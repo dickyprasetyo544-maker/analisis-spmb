@@ -101,12 +101,12 @@
                 🎓 SPMB SMPN 8
             </div>
             <div class="mt-4" id="menuSidebar">
-    <a href="dashboard.html" class="sidebar-link active"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
-    <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
-    <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
-    
-    <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
-</div>
+                <a href="dashboard.html" class="sidebar-link active"><i class="bi bi-grid-fill me-2"></i> Beranda</a>
+                <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
+                <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-bar-chart-fill me-2"></i> Analisis Peluang</a>
+                
+                <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola PG</a>
+            </div>
         </div>
 
         <div id="page-content-wrapper">
@@ -123,7 +123,7 @@
                     <div class="d-flex align-items-center gap-3">
                         <div class="d-none d-md-block text-end">
                             <span class="text-dark fw-bold d-block" id="welcomeText" style="line-height: 1;">User</span>
-                            <small class="text-muted" id="roleText">Siswa</small>
+                            <small class="text-muted fw-semibold" id="roleText">Siswa</small>
                         </div>
                         <button class="btn btn-danger btn-sm rounded-pill fw-bold px-3 shadow-sm" onclick="logout()">
                             <i class="bi bi-power"></i> <span class="d-none d-md-inline">Keluar</span>
@@ -151,6 +151,18 @@
                             <h5 class="mt-3 fw-bold text-dark">Petunjuk Teknis Belum Tersedia</h5>
                             <p class="text-muted mb-0 px-3">Rangkuman petunjuk teknis dan informasi umum pendaftaran akan segera diperbarui oleh Administrator.</p>
                         </div>
+                    </div>
+                </div>
+
+                <div id="guruPanel" class="card card-premium mb-4 border-start border-success border-5 d-none">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success bg-opacity-25 text-success rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="bi bi-person-video3 fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0 text-dark">Ruang Kerja Guru</h5>
+                        </div>
+                        <p class="text-muted mb-0">Selamat datang, Bapak/Ibu Guru. Anda dapat menggunakan menu <strong>Master Nilai</strong> dan <strong>Analisis Peluang</strong> di sidebar untuk memantau data pendaftar dan statistik kelulusan siswa secara real-time.</p>
                     </div>
                 </div>
 
@@ -213,11 +225,12 @@
         });
 
         // --- 2. CEK LOGIN & KEAMANAN ROLE ---
-        const userName = localStorage.getItem('userName');
-        const userRole = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName') || 'Pengguna Penguji'; // Fallback text jika belum ada
+        const userRole = localStorage.getItem('userRole') || 'siswa'; 
 
-        if (!userName) {
-            window.location.href = 'index.html';
+        if (!localStorage.getItem('userName')) {
+            // Uncomment baris di bawah jika sudah di-hosting / dicolok ke index
+            // window.location.href = 'index.html';
         }
 
         // Tulis nama di Navbar
@@ -227,16 +240,30 @@
             document.getElementById('roleText').innerText = 'Administrator';
             document.getElementById('roleText').classList.replace('text-muted', 'text-danger');
             
-            // Munculkan menu admin dan ambil data pending
+            // Tampilkan admin panel, hapus guru panel
             document.getElementById('adminPanel').classList.remove('d-none');
             document.getElementById('menuAdminPG').classList.remove('d-none');
+            const guruPanel = document.getElementById('guruPanel');
+            if(guruPanel) guruPanel.remove();
+
             loadPendingUsers(); 
-        } else {
-            // KEAMANAN: Jika bukan admin, hapus elemen dari DOM secara total
+
+        } else if (userRole === 'guru') {
+            document.getElementById('roleText').innerText = 'Guru Pendidik';
+            document.getElementById('roleText').classList.replace('text-muted', 'text-success'); // Warna role hijau
+            
+            // Tampilkan guru panel, hapus admin panel
+            document.getElementById('guruPanel').classList.remove('d-none');
             const adminPanel = document.getElementById('adminPanel');
-            if(adminPanel) {
-                adminPanel.remove(); 
-            }
+            if(adminPanel) adminPanel.remove();
+
+        } else {
+            // SISWA: Hapus kedua panel
+            document.getElementById('roleText').innerText = 'Siswa Pendaftar';
+            const adminPanel = document.getElementById('adminPanel');
+            const guruPanel = document.getElementById('guruPanel');
+            if(adminPanel) adminPanel.remove();
+            if(guruPanel) guruPanel.remove();
         }
 
         // --- 3. FUNGSI LOGOUT ---
@@ -247,8 +274,10 @@
 
         // --- 4. FUNGSI-FUNGSI KHUSUS ADMIN ---
         async function loadPendingUsers() {
+            // (Tetap aman karena fungsi ini tidak dipanggil otomatis jika rolenya guru/siswa)
             const tbody = document.getElementById('tabelPending');
-            // Tampilkan loading state
+            if(!tbody) return; 
+
             tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5"><div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>Memuat data...</td></tr>`;
             
             try {
