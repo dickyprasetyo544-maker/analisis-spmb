@@ -19,17 +19,25 @@ app.use(express.urlencoded({ extended: true }));
 // Konfigurasi Multer
 const upload = multer({ storage: multer.memoryStorage() });
 
-// --- API LOGIN (SUDAH DIPERBAIKI SESUAI DATABASE) ---
+// --- API LOGIN (VERSI DETEKTIF CCTV) ---
 router.post('/login', async (req, res) => {
+    // CCTV 1: Cek apakah data dari web beneran sampai ke server
+    console.log("=== ADA PERCOBAAN LOGIN BARU ===");
+    console.log("Data mentah dari frontend:", req.body);
+    
     const { username, password } = req.body;
+    console.log(`Mencari Username: [${username}], Password: [${password}]`);
+
     try {
-        // 1. Cek di tabel users_app dulu (Tempat Admin Utama berada sesuai screenshot)
-        let { data: adminData } = await supabase
+        // 1. Cek di tabel users_app dulu (Admin)
+        let { data: adminData, error: adminErr } = await supabase
             .from('users_app')
             .select('*')
             .eq('username', username)
             .eq('password', password)
             .maybeSingle();
+
+        console.log("Hasil cek tabel Admin:", adminData ? "Ketemu" : "Tidak ada");
 
         // Kalau ketemu sebagai Admin, langsung loloskan
         if (adminData) {
@@ -41,7 +49,7 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // 2. Kalau bukan Admin, coba cari di tabel akun_spmb (Tempat Guru/User biasa daftar)
+        // 2. Kalau bukan Admin, coba cari di tabel akun_spmb (Guru)
         const { data: userData, error: userError } = await supabase
             .from('akun_spmb')
             .select('*')
@@ -49,19 +57,24 @@ router.post('/login', async (req, res) => {
             .eq('password', password)
             .maybeSingle();
 
+        console.log("Hasil cek tabel Guru:", userData ? "Ketemu" : "Tidak ada");
+
         if (userError) throw userError;
 
         // Kalau di kedua tabel sama sekali nggak ada
         if (!userData) {
+            console.log("TOLAK: Data beneran gak ada di database!");
             return res.json({ success: false, message: 'Username atau password salah!' });
         }
 
         // Kalau ada di akun_spmb tapi belum disetujui admin
         if (userData.status === 'pending') {
+            console.log("TOLAK: Akun ada tapi statusnya pending.");
             return res.json({ success: false, message: 'Akun belum aktif! Tunggu konfirmasi admin.' });
         }
 
         // Kalau berhasil login sebagai user biasa
+        console.log("SUKSES: Lolos sebagai Guru.");
         res.json({ 
             success: true, 
             message: 'Login berhasil!', 
@@ -70,6 +83,7 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (err) {
+        console.error("SERVER ERROR:", err.message);
         res.json({ success: false, message: 'Kesalahan Server: ' + err.message });
     }
 });
