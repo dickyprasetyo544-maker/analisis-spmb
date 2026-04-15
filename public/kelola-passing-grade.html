@@ -48,7 +48,7 @@
                         <tr>
                             <th>No</th>
                             <th>Sekolah</th>
-                            <th>Peminatan</th>
+                            <th>Jurusan / Peminatan</th>
                             <th>Passing Grade</th>
                             <th>Aksi</th>
                         </tr>
@@ -68,7 +68,7 @@
                         <tr>
                             <th>No</th>
                             <th>Sekolah</th>
-                            <th>Kompetensi Keahlian</th>
+                            <th>Jurusan / Kompetensi</th>
                             <th>Passing Grade</th>
                             <th>Aksi</th>
                         </tr>
@@ -97,14 +97,16 @@
                     let noSMA = 1, noSMK = 1;
 
                     data.forEach(item => {
-                        // Cek apakah SMA atau SMK (berdasarkan kolom peminatan/kompetensi)
+                        // Cek apakah SMA atau SMK berdasarkan kolom "jenjang" di database
+                        const isSMA = item.jenjang === 'SMA';
+                        
                         const row = `
                             <tr>
-                                <td>${item.peminatan ? noSMA++ : noSMK++}</td>
-                                <td>${item.sekolah}</td>
-                                <td>${item.peminatan || item.kompetensi}</td>
+                                <td>${isSMA ? noSMA++ : noSMK++}</td>
+                                <td>${item.nama_sekolah}</td>
+                                <td>${item.jurusan}</td>
                                 <td>
-                                    <input type="number" step="0.01" class="form-control input-pg" id="pg-${item.id}" value="${item.passing_grade}">
+                                    <input type="number" step="0.01" class="form-control input-pg" id="pg-${item.id}" value="${item.nilai_minimal}">
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-primary" onclick="updatePG(${item.id})">
@@ -114,7 +116,7 @@
                             </tr>
                         `;
                         
-                        if (item.peminatan) htmlSMA += row;
+                        if (isSMA) htmlSMA += row;
                         else htmlSMK += row;
                     });
 
@@ -133,7 +135,8 @@
                 const res = await fetch('/api/update-pg', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, passing_grade: newValue })
+                    // Mengirimkan data dengan nama key 'nilai_minimal' sesuai backend baru
+                    body: JSON.stringify({ id, nilai_minimal: newValue })
                 });
                 
                 const result = await res.json();
