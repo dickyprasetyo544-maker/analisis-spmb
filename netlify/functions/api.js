@@ -19,25 +19,36 @@ app.use(express.urlencoded({ extended: true }));
 // Konfigurasi Multer
 const upload = multer({ storage: multer.memoryStorage() });
 
-// --- API LOGIN (VERSI DETEKTIF CCTV) ---
+// --- API LOGIN (VERSI ANTI-BUFFER) ---
 router.post('/login', async (req, res) => {
-    // CCTV 1: Cek apakah data dari web beneran sampai ke server
-    console.log("=== ADA PERCOBAAN LOGIN BARU ===");
-    console.log("Data mentah dari frontend:", req.body);
+    // 1. PEMBUKA BUNGKUS DATA (Penawar Buffer Netlify)
+    let payload = req.body;
     
-    const { username, password } = req.body;
+    try {
+        if (Buffer.isBuffer(payload)) {
+            // Kalau bentuknya Buffer, ubah jadi teks lalu jadikan JSON
+            payload = JSON.parse(payload.toString('utf8'));
+        } else if (typeof payload === 'string') {
+            // Kalau bentuknya string biasa, ubah jadikan JSON
+            payload = JSON.parse(payload);
+        }
+    } catch (e) {
+        console.error("Gagal membaca format data dari frontend:", e);
+    }
+
+    // 2. Ambil username & password dari data yang sudah dibuka
+    const { username, password } = payload;
+    
     console.log(`Mencari Username: [${username}], Password: [${password}]`);
 
     try {
-        // 1. Cek di tabel users_app dulu (Admin)
+        // 3. Cek di tabel users_app dulu (Admin)
         let { data: adminData, error: adminErr } = await supabase
             .from('users_app')
             .select('*')
             .eq('username', username)
             .eq('password', password)
             .maybeSingle();
-
-        console.log("Hasil cek tabel Admin:", adminData ? "Ketemu" : "Tidak ada");
 
         // Kalau ketemu sebagai Admin, langsung loloskan
         if (adminData) {
@@ -49,7 +60,7 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // 2. Kalau bukan Admin, coba cari di tabel akun_spmb (Guru)
+        // 4. Kalau bukan Admin, coba cari di tabel akun_spmb (Guru)
         const { data: userData, error: userError } = await supabase
             .from('akun_spmb')
             .select('*')
@@ -57,24 +68,19 @@ router.post('/login', async (req, res) => {
             .eq('password', password)
             .maybeSingle();
 
-        console.log("Hasil cek tabel Guru:", userData ? "Ketemu" : "Tidak ada");
-
         if (userError) throw userError;
 
         // Kalau di kedua tabel sama sekali nggak ada
         if (!userData) {
-            console.log("TOLAK: Data beneran gak ada di database!");
             return res.json({ success: false, message: 'Username atau password salah!' });
         }
 
         // Kalau ada di akun_spmb tapi belum disetujui admin
         if (userData.status === 'pending') {
-            console.log("TOLAK: Akun ada tapi statusnya pending.");
             return res.json({ success: false, message: 'Akun belum aktif! Tunggu konfirmasi admin.' });
         }
 
         // Kalau berhasil login sebagai user biasa
-        console.log("SUKSES: Lolos sebagai Guru.");
         res.json({ 
             success: true, 
             message: 'Login berhasil!', 
