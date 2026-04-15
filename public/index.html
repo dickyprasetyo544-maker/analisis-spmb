@@ -195,8 +195,8 @@
             btnSubmit.disabled = true;
 
             try {
-                // Kirim ke server Node.js
-                const response = await fetch('/api/login', {
+                // --- INI YANG DIUBAH (NEMBAK LANGSUNG KE JALUR ASLI NETLIFY) ---
+                const response = await fetch('/.netlify/functions/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: usernameValue, password: passwordValue })
