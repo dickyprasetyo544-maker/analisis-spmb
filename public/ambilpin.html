@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambil PIN - SPMB Jatim 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            color: #334155;
+        }
+
+        /* Navbar & Header */
+        .navbar-custom {
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+            margin-bottom: -50px;
+        }
+
+        /* Card Premium */
+        .card-premium {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .card-premium:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+
+        /* Custom Tabs untuk Kategori Lulusan */
+        .nav-pills-custom .nav-link {
+            color: #64748b;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .nav-pills-custom .nav-link.active {
+            color: #1d4ed8;
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-pills-custom .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        /* Checklist Dokumen */
+        .doc-list {
+            list-style: none;
+            padding: 0;
+        }
+        .doc-list li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e2e8f0;
+            line-height: 1.6;
+        }
+        .doc-list li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .doc-list li i {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1.5rem;
+            color: #22c55e;
+            background: #dcfce7;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Timeline / Steps */
+        .step-list {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #bfdbfe;
+            margin-top: 20px;
+        }
+        .step-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+        .step-item::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            background-color: #3b82f6;
+            border: 4px solid #eff6ff;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section { padding: 3rem 1.5rem; }
+            .card-premium { border-radius: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom sticky-top py-3 shadow-sm">
+        <div class="container">
+            <a href="dashboard-siswa.html" class="btn btn-light rounded-pill border shadow-sm fw-medium">
+                <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
+            </a>
+            <span class="fw-bold text-primary d-none d-sm-block">Panduan SPMB 2026</span>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center position-relative">
+        <div class="container position-relative z-1">
+            <div class="d-inline-block bg-white bg-opacity-25 p-3 rounded-circle mb-3">
+                <i class="bi bi-key-fill text-white fs-1"></i>
+            </div>
+            <h2 class="fw-bold mb-3">Tata Cara Pengambilan PIN</h2>
+            <p class="fs-6 opacity-75 mx-auto" style="max-width: 700px;">
+                Semua calon Murid baru wajib mengambil PIN (Personal Identification Number) dan menentukan titik lokasi domisili rumah dengan aplikasi geolokasi secara mandiri.
+            </p>
+            <a href="https://spmb.jatimprov.go.id" target="_blank" class="btn btn-light text-primary rounded-pill px-4 py-2 mt-2 fw-bold shadow">
+                <i class="bi bi-globe me-2"></i> Buka spmb.jatimprov.go.id
+            </a>
+        </div>
+    </div>
+
+    <div class="container" style="position: relative; z-index: 2; padding-top: 20px;">
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card card-premium h-100 border-start border-4 border-warning">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-laptop fs-2 text-warning me-3"></i>
+                            <h5 class="fw-bold mb-0">1. Pengisian Data Online</h5>
+                        </div>
+                        <p class="text-muted mb-2">Mengisi data dan menentukan titik lokasi rumah secara mandiri.</p>
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-6"><i class="bi bi-calendar-event me-1"></i> 28 Mei - 9 Juni 2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-premium h-100 border-start border-4 border-success">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-building fs-2 text-success me-3"></i>
+                            <h5 class="fw-bold mb-0">2. Verifikasi Offline</h5>
+                        </div>
+                        <p class="text-muted mb-2">Mendatangi SMA/SMK terdekat (sesuai sistem) untuk validasi berkas.</p>
+                        <span class="badge bg-success px-3 py-2 rounded-pill fs-6"><i class="bi bi-calendar-check me-1"></i> 29 Mei - 10 Juni 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info rounded-4 border-0 shadow-sm mb-4 p-4 d-flex align-items-center">
+            <i class="bi bi-info-circle-fill fs-1 text-info me-3"></i>
+            <div>
+                <h6 class="fw-bold text-dark mb-1">Catatan Penting:</h6>
+                <p class="mb-0 text-dark opacity-75">Pengambilan PIN hanya dapat dilakukan <strong>1 (satu) kali</strong> selama proses SPMB berlangsung dan akan digunakan untuk proses pendaftaran.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7 mb-4">
+                <div class="card card-premium h-100">
+                    <div class="card-body p-4 p-md-5">
+                        <h4 class="fw-bold mb-4"><i class="bi bi-list-ol text-primary me-2"></i> Langkah Pengambilan PIN</h4>
+                        <p class="text-muted mb-4">Pilih kategori lulusan yang sesuai dengan kondisi Anda untuk melihat tata cara lengkapnya:</p>
+
+                        <div class="nav flex-column nav-pills nav-pills-custom" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" id="tab-lulusan-jatim" data-bs-toggle="pill" data-bs-target="#lulusan-jatim" type="button" role="tab" aria-selected="true">
+                                <i class="bi bi-mortarboard-fill"></i> Lulusan Jatim Tahun 2026
+                            </button>
+                            <button class="nav-link" id="tab-belum-rapor" data-bs-toggle="pill" data-bs-target="#belum-rapor" type="button" role="tab" aria-selected="false">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Lulusan 2026 (Nilai Rapor Belum Diisi Sekolah)
+                            </button>
+                            <button class="nav-link" id="tab-luar-jatim" data-bs-toggle="pill" data-bs-target="#luar-jatim" type="button" role="tab" aria-selected="false">
+                                <i class="bi bi-globe-americas"></i> Lulusan Luar Jatim / Sebelum Tahun 2026
+                            </button>
+                        </div>
+
+                        <div class="tab-content mt-4" id="v-pills-tabContent">
+                            
+                            <div class="tab-pane fade show active" id="lulusan-jatim" role="tabpanel" tabindex="0">
+                                <div class="bg-primary bg-opacity-10 rounded-4 p-4 border border-primary border-opacity-25">
+                                    <h6 class="fw-bold text-primary mb-3">Tata Cara bagi Lulusan Jatim 2026:</h6>
+                                    <div class="step-list">
+                                        <div class="step-item"><b>Login</b> ke laman <i>spmb.jatimprov.go.id</i> menggunakan NISN, NPSN sekolah asal, Tanggal Lahir, dan Tanggal Penerbitan KK/SKD/SKPD.</div>
+                                        <div class="step-item"><b>Isi kelengkapan data</b> dan tentukan titik lokasi domisili rumah sesuai berkas.</div>
+                                        <div class="step-item"><b>Datang ke SMA/SMK terdekat</b> (rekomendasi sistem) untuk Verifikasi & Validasi (Verval) data dan titik lokasi oleh operator sekolah.</div>
+                                        <div class="step-item"><b>Tanda tangan</b> Berita Acara pengambilan PIN.</div>
+                                        <div class="step-item"><b>Unduh PIN</b> dapat dilakukan 1 (satu) hari setelah proses Verval selesai.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="belum-rapor" role="tabpanel" tabindex="0">
+                                <div class="bg-primary bg-opacity-10 rounded-4 p-4 border border-primary border-opacity-25">
+                                    <h6 class="fw-bold text-primary mb-3">Tata Cara (Jika Nilai Rapor Belum Diisi Sekolah):</h6>
+                                    <div class="step-list">
+                                        <div class="step-item"><b>Login</b> ke laman <i>spmb.jatimprov.go.id</i> menggunakan NISN, NPSN sekolah asal, Tanggal Lahir, dan Tanggal Penerbitan KK/SKD/SKPD.</div>
+                                        <div class="step-item"><b>Isi kelengkapan data</b> dan tentukan titik lokasi domisili rumah.</div>
+                                        <div class="step-item text-danger fw-medium"><b>Isi kelengkapan Nilai Rapor</b> secara mandiri ke dalam sistem.</div>
+                                        <div class="step-item"><b>Datang ke SMA/SMK terdekat</b> (rekomendasi sistem) untuk Verifikasi & Validasi data oleh operator.</div>
+                                        <div class="step-item"><b>Tanda tangan</b> Berita Acara pengambilan PIN.</div>
+                                        <div class="step-item"><b>Unduh PIN</b> 1 (satu) hari setelah Verval.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="luar-jatim" role="tabpanel" tabindex="0">
+                                <div class="bg-primary bg-opacity-10 rounded-4 p-4 border border-primary border-opacity-25">
+                                    <h6 class="fw-bold text-primary mb-3">Tata Cara Lulusan Luar Jatim / Lulusan Lama:</h6>
+                                    <div class="step-list">
+                                        <div class="step-item"><b>Login</b> ke laman <i>spmb.jatimprov.go.id</i> menggunakan kredensial (NISN, NPSN, Tgl Lahir, Tgl KK).</div>
+                                        <div class="step-item"><b>Isi kelengkapan data</b> pribadi dan penentuan titik lokasi domisili.</div>
+                                        <div class="step-item text-danger fw-medium"><b>Wajib mengisi kelengkapan Nilai Rapor</b> ke dalam sistem.</div>
+                                        <div class="step-item"><b>Datang ke SMA/SMK terdekat</b> (rekomendasi sistem) untuk Verifikasi & Validasi data oleh operator.</div>
+                                        <div class="step-item"><b>Tanda tangan</b> Berita Acara pengambilan PIN.</div>
+                                        <div class="step-item"><b>Unduh PIN</b> 1 (satu) hari setelah Verval.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 mb-4">
+                <div class="card card-premium h-100 bg-white">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-2"><i class="bi bi-folder-check text-success me-2"></i> Dokumen Verval</h4>
+                        <p class="text-muted small mb-4">Bawa dokumen berikut (Fotokopi & Tunjukkan Aslinya) ke sekolah saat validasi offline:</p>
+                        
+                        <ul class="doc-list text-dark text-opacity-75 fs-6">
+                            <li><i class="bi bi-check"></i> Kartu Keluarga (KK).</li>
+                            <li><i class="bi bi-check"></i> SKD & SK dari BPBD (Khusus daerah tertimpa bencana alam).</li>
+                            <li><i class="bi bi-check"></i> SKD, Izin Operasional Lembaga & SPTJM (Khusus domisili Ponpes/Panti).</li>
+                            <li><i class="bi bi-check"></i> Ijazah / SKL / Surat Keterangan Kelas Akhir (Kelas 9) asal SMP/MTs.</li>
+                            <li><i class="bi bi-check"></i> Sertifikat Hasil TKA (SHTKA) asal SMP/MTs.</li>
+                            <li><i class="bi bi-check"></i> Surat Keterangan Dokter Spesialis/Psikolog & Hasil Asesmen Sekolah (Khusus Penyandang Disabilitas).</li>
+                            <li><i class="bi bi-check"></i> Surat Keterangan Pindah Domisili (SKPD) & SK Mutasi Orang Tua.</li>
+                            <li><i class="bi bi-check"></i> Surat Penugasan Orang Tua dari Kepala SMA/SMK (Khusus jalur Anak Guru/Tenaga Kependidikan).</li>
+                            <li><i class="bi bi-check"></i> Hasil Tes Kesehatan (Khusus SMK jurusan tertentu; bebas buta warna/tinggi badan).</li>
+                            <li><i class="bi bi-check"></i> Surat Pernyataan Calon Murid (Khusus lulusan sebelum tahun 2026).</li>
+                            <li><i class="bi bi-check"></i> Surat Pernyataan Orang Tua/Wali (Format terlampir, bersedia diproses hukum jika memalsukan dokumen).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center pb-4 text-muted small">
+        &copy; 2026 SMP NEGERI 8 PROBOLINGGO.<br>
+        <span class="fw-bold text-primary mt-2 d-inline-block">Dibuat oleh Dhickz666</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

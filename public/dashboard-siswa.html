@@ -354,43 +354,63 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- 1. TOGGLE SIDEBAR UNTUK HP ---
-        const wrapper = document.getElementById("wrapper");
-        const overlay = document.getElementById("overlay");
-        
-        document.getElementById("menu-toggle").addEventListener("click", function(e) {
-            e.preventDefault();
-            wrapper.classList.toggle("toggled");
-        });
+    // --- 0. PROTEKSI HALAMAN (Wajib di awal) ---
+    const checkIsLoggedIn = localStorage.getItem('isLoggedIn');
+    const checkRole = localStorage.getItem('role');
+    const checkUser = localStorage.getItem('user');
 
-        overlay.addEventListener("click", function() {
-            wrapper.classList.remove("toggled");
-        });
+    // 1. Cek apakah pengguna belum login
+    if (checkIsLoggedIn !== 'true') {
+        alert("Eits, ketahuan! Silakan login terlebih dahulu ya. 🔒");
+        window.location.replace("index.html");
+    }
 
-        // --- 2. CEK LOGIN & ROLE SEDERHANA ---
-        const userName = localStorage.getItem('userName');
-        const userRole = localStorage.getItem('userRole');
+    // 2. Normalisasi role (antisipasi typo spasi/huruf besar dari database)
+    const roleUser = (checkRole || '').toLowerCase().trim();
 
-        if (!userName) {
-            window.location.href = 'index.html';
+    // 3. Cek apakah rolenya benar-benar siswa
+    if (roleUser !== 'siswa') {
+        // Jika admin/guru nyasar ke dashboard siswa, tendang balik ke dashboard admin
+        window.location.replace("dashboard.html"); 
+    }
+
+
+    // --- 1. TOGGLE SIDEBAR UNTUK HP ---
+    const wrapper = document.getElementById("wrapper");
+    const overlay = document.getElementById("overlay");
+    
+    document.getElementById("menu-toggle").addEventListener("click", function(e) {
+        e.preventDefault();
+        wrapper.classList.toggle("toggled");
+    });
+
+    overlay.addEventListener("click", function() {
+        wrapper.classList.remove("toggled");
+    });
+
+
+    // --- 2. SET DATA USER KE UI ---
+    // Pastikan elemen dengan ID 'welcomeText' dan 'roleText' ada di HTML kamu
+    if (document.getElementById('welcomeText')) {
+        document.getElementById('welcomeText').innerText = checkUser;
+    }
+    
+    if (document.getElementById('roleText')) {
+        document.getElementById('roleText').innerText = 'Siswa';
+    }
+
+
+    // --- 3. FUNGSI LOGOUT ---
+    function logout() {
+        if(confirm('Apakah anda yakin ingin keluar?')) {
+            // Bersihkan semua sesi login
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('role');
+            localStorage.removeItem('user');
+            
+            window.location.replace('index.html');
         }
-
-        document.getElementById('welcomeText').innerText = userName;
-
-        if (userRole === 'admin') {
-            document.getElementById('roleText').innerText = 'Administrator';
-            document.getElementById('roleText').classList.replace('text-muted', 'text-danger');
-            // Menampilkan menu kelola jika admin (opsional)
-            document.getElementById('menuAdminPG').classList.remove('d-none');
-        } else {
-            document.getElementById('roleText').innerText = 'Siswa';
-        }
-
-        // --- 3. FUNGSI LOGOUT ---
-        function logout() {
-            localStorage.clear(); 
-            window.location.href = 'index.html'; 
-        }
-    </script>
+    }
+</script>
 </body>
 </html>

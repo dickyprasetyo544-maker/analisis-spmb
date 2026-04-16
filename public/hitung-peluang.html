@@ -9,7 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
     <script>
-        if (!localStorage.getItem('isLoggedIn')) {
+        const checkIsLoggedIn = localStorage.getItem('isLoggedIn');
+        const checkRole = localStorage.getItem('role');
+        const checkUser = localStorage.getItem('user');
+
+        // Jika KETIGANYA tidak ada, berarti belum login
+        if (!checkIsLoggedIn && !checkRole && !checkUser) {
             alert("Eits, ketahuan! Silakan login terlebih dahulu ya. 🔒");
             window.location.replace("index.html");
         }
@@ -268,7 +273,7 @@
         wrapper.classList.remove("toggled");
     });
 
-    // --- 2. LOGIKA APLIKASI (Diperbarui untuk 3 Pilihan) ---
+    // --- 2. LOGIKA APLIKASI ---
     let masterDataPG = [];
 
     // Mengambil data dari API cukup 1 kali saat halaman diload
@@ -281,8 +286,6 @@
             }
         } catch (error) {
             console.error("Gagal ambil data PG:", error);
-            // Opsional: alert kalau server mati
-            // alert("Gagal memuat data sekolah. Pastikan koneksi server aman.");
         }
     }
 
@@ -293,7 +296,7 @@
         
         selectSekolah.innerHTML = '<option value="">-- Pilih Sekolah --</option>';
         
-        if (!jenjang) return; // Jika jenjang dikosongkan, stop proses
+        if (!jenjang) return; 
 
         const filtered = masterDataPG.filter(item => item.jenjang === jenjang);
         filtered.forEach(item => {
@@ -382,8 +385,12 @@
 
     function logout() {
         if(confirm('Apakah anda yakin ingin keluar?')) {
-            localStorage.removeItem('isLoggedIn'); // Jangan lupa hapus session!
-            window.location.href = 'index.html';
+            // Hapus semua kemungkinan session di sini
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('role');
+            localStorage.removeItem('user');
+            
+            window.location.replace('index.html');
         }
     }
 

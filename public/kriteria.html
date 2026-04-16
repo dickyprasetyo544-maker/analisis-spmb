@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kriteria Pemeringkatan - SPMB Jatim 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        /* Navbar & Hero */
+        .navbar-custom {
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 3.5rem 1.5rem;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        /* Nav Pills Styling (Menu Samping) */
+        .nav-pills-custom .nav-link {
+            color: #475569;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-align: left;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-pills-custom .nav-link i {
+            font-size: 1.3rem;
+            margin-right: 12px;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+
+        .nav-pills-custom .nav-link:hover {
+            border-color: #cbd5e1;
+            transform: translateX(4px);
+        }
+
+        .nav-pills-custom .nav-link.active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+            transform: translateX(8px);
+        }
+
+        .nav-pills-custom .nav-link.active i {
+            color: white;
+        }
+
+        /* Card Content Styling */
+        .card-content {
+            background: #ffffff;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            padding: 2rem;
+        }
+
+        .section-title {
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #e2e8f0;
+        }
+
+        /* Ordered List Styling */
+        .rank-list {
+            list-style: none;
+            counter-reset: rank-counter;
+            padding-left: 0;
+        }
+        .rank-list > li {
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: #f8fafc;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-right: 15px;
+            border-radius: 10px;
+            border: 1px solid #f1f5f9;
+        }
+        .rank-list > li::before {
+            counter-increment: rank-counter;
+            content: counter(rank-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background-color: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Tables */
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .table-custom thead th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e1;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .table-custom td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .table-scrollable {
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* Special Alerts/Badges */
+        .golden-ticket {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1px solid #fde68a;
+            border-left: 5px solid #f59e0b;
+        }
+
+        @media (max-width: 991px) {
+            .nav-pills-custom {
+                display: flex;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 10px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-pills-custom .nav-link {
+                margin-right: 10px;
+                margin-bottom: 0;
+                transform: none !important;
+            }
+            .card-content { padding: 1.5rem; }
+            .hero-section { border-radius: 0 0 20px 20px; }
+        }
+        
+        /* Footer Styling */
+        .footer-custom {
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom py-3 sticky-top">
+        <div class="container">
+            <a href="dashboard-siswa.html" class="btn btn-outline-secondary rounded-pill fw-medium btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Beranda
+            </a>
+            <span class="fw-bold text-primary">Juknis SPMB 2026</span>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center">
+        <div class="container">
+            <div class="d-inline-block bg-white bg-opacity-10 p-3 rounded-circle mb-3">
+                <i class="bi bi-bar-chart-steps text-white fs-1"></i>
+            </div>
+            <h2 class="fw-bold mb-2">Kriteria Pemeringkatan SPMB</h2>
+            <p class="fs-6 opacity-75 mx-auto mb-0" style="max-width: 600px;">
+                Mekanisme dan urutan prioritas penerimaan calon murid baru apabila jumlah pendaftar melebihi kuota daya tampung sekolah.
+            </p>
+        </div>
+    </div>
+
+    <div class="container pb-4">
+        <div class="row g-4">
+            
+            <div class="col-lg-4">
+                <div class="nav flex-column nav-pills nav-pills-custom" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active" id="tab-domisili" data-bs-toggle="pill" data-bs-target="#domisili" type="button" role="tab">
+                        <i class="bi bi-geo-alt-fill"></i> 1. Jalur Domisili
+                    </button>
+                    <button class="nav-link" id="tab-afirmasi" data-bs-toggle="pill" data-bs-target="#afirmasi" type="button" role="tab">
+                        <i class="bi bi-heart-fill text-danger"></i> 2. Jalur Afirmasi
+                    </button>
+                    <button class="nav-link" id="tab-mutasi" data-bs-toggle="pill" data-bs-target="#mutasi" type="button" role="tab">
+                        <i class="bi bi-people-fill text-success"></i> 3. Jalur Mutasi Orang Tua
+                    </button>
+                    <button class="nav-link" id="tab-prestasi-lomba" data-bs-toggle="pill" data-bs-target="#prestasi-lomba" type="button" role="tab">
+                        <i class="bi bi-trophy-fill text-warning"></i> 4. Jalur Prestasi Lomba
+                    </button>
+                    <button class="nav-link" id="tab-akademik" data-bs-toggle="pill" data-bs-target="#akademik" type="button" role="tab">
+                        <i class="bi bi-journal-bookmark-fill text-info"></i> 5. Nilai Prestasi Akademik
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="tab-content card-content" id="v-pills-tabContent">
+                    
+                    <div class="tab-pane fade show active" id="domisili" role="tabpanel">
+                        <h4 class="section-title"><i class="bi bi-geo-alt text-primary me-2"></i>1. Jalur Domisili</h4>
+                        
+                        <h5 class="fw-bold text-primary mt-4">A. Jalur Domisili SMA</h5>
+                        <p class="text-muted small mb-3">Mekanisme pemeringkatan dilakukan secara bertahap dari Pilihan 1 hingga Pilihan 3. Apabila pendaftar melebihi kuota, urutan seleksi pada setiap pilihan adalah:</p>
+                        
+                        <div class="alert alert-light border shadow-sm">
+                            <h6 class="fw-bold mb-2">Tahap 1: Domisili Reguler (Kuota Lulusan 2026: 19% | Lulusan Lama: 1%)</h6>
+                            <ul class="rank-list mb-0">
+                                <li><strong>Nilai Kemampuan Akademik</strong>.</li>
+                                <li>Jika nilai sama, diperingkat berdasarkan <strong>Jarak Domisili Terdekat</strong>.</li>
+                                <li>Jika jarak sama, diperingkat berdasarkan <strong>Usia Calon Murid (Lebih Tua)</strong>.</li>
+                                <li>Jika usia sama, diperingkat berdasarkan <strong>Waktu Pendaftaran</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-secondary border-0 mt-3 small">
+                            <strong>Tahap 2:</strong> Jika tidak diterima di reguler, lulusan 2026 akan diikutkan ke <strong>Jalur Domisili Sebaran (15%)</strong> dengan kriteria urutan (1-4) yang sama.
+                        </div>
+
+                        <h5 class="fw-bold text-primary mt-5">B. Jalur Domisili SMK</h5>
+                        <p class="text-muted small mb-3">Sistem menyeleksi berdasarkan Konsentrasi Keahlian Pilihan 1 hingga 3. Urutan seleksinya adalah:</p>
+                        <ul class="rank-list mb-0">
+                            <li><strong>Jarak Domisili Terdekat</strong> dengan Satuan Pendidikan tujuan.</li>
+                            <li>Jika jarak sama, diperingkat berdasarkan <strong>Usia Calon Murid (Lebih Tua)</strong>.</li>
+                            <li>Jika usia sama, diperingkat berdasarkan <strong>Waktu Pendaftaran</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-pane fade" id="afirmasi" role="tabpanel">
+                        <h4 class="section-title"><i class="bi bi-heart text-danger me-2"></i>2. Jalur Afirmasi</h4>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold">A. Afirmasi Keluarga Ekonomi Tidak Mampu & Nilai Akademik</h6>
+                            <p class="text-muted small">Pendaftar jalur afirmasi keluarga tidak mampu yang memiliki <strong>Nilai Akademik ≥ 85.00</strong> akan otomatis diseleksi terlebih dahulu pada kuota Nilai Akademik (7%), dengan urutan:</p>
+                            <ul class="rank-list mb-3">
+                                <li><strong>Jarak Domisili Terdekat</strong>.</li>
+                                <li>Jika sama, berdasarkan <strong>Usia (Lebih Tua)</strong>.</li>
+                                <li>Jika sama, berdasarkan <strong>Waktu Pendaftaran</strong>.</li>
+                            </ul>
+                            <div class="alert alert-warning border-0 small py-2">
+                                <i class="bi bi-info-circle-fill me-1"></i> Jika tidak lolos di kuota 7% tersebut, pendaftar otomatis diikutkan pada pemeringkatan jalur afirmasi keluarga tidak mampu reguler (kuota 13%) dengan urutan kriteria yang sama.
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="fw-bold">B. Afirmasi Reguler, Anak Buruh & Disabilitas</h6>
+                            <p class="text-muted small">Jika pendaftar melebihi kuota daya tampung, urutan seleksinya adalah:</p>
+                            <ul class="rank-list mb-0">
+                                <li><strong>Jarak Domisili Terdekat</strong>.</li>
+                                <li>Jika sama, berdasarkan <strong>Usia (Lebih Tua)</strong>.</li>
+                                <li>Jika sama, berdasarkan <strong>Waktu Pendaftaran</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="mutasi" role="tabpanel">
+                        <h4 class="section-title"><i class="bi bi-people text-success me-2"></i>3. Jalur Mutasi Orang Tua/Wali</h4>
+                        <p class="mb-4">Untuk SMA maupun SMK, apabila jumlah pendaftar melebihi kuota daya tampung, maka pemeringkatan dilakukan berdasarkan urutan mutlak berikut:</p>
+                        
+                        <ul class="rank-list mb-0">
+                            <li><strong>Jarak Domisili Terdekat</strong> dengan Satuan Pendidikan tujuan.</li>
+                            <li>Jika jarak sama, maka diperingkat berdasarkan <strong>Usia Calon Murid (Lebih Tua)</strong>.</li>
+                            <li>Jika usia masih sama, maka diperingkat berdasarkan <strong>Waktu Pendaftaran</strong> (yang lebih awal mendaftar pada sistem).</li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-pane fade" id="prestasi-lomba" role="tabpanel">
+                        <h4 class="section-title"><i class="bi bi-trophy text-warning me-2"></i>4. Jalur Prestasi Hasil Lomba</h4>
+                        
+                        <h5 class="fw-bold mb-3 fs-6">Urutan Kriteria Pemeringkatan Utama:</h5>
+                        <ul class="rank-list mb-4">
+                            <li><strong>Perolehan Skor Prestasi</strong>.</li>
+                            <li>Jika skor sama: <strong>Jarak Domisili Terdekat</strong>.</li>
+                            <li>Jika jarak sama: <strong>Rata-rata Nilai Hasil TKA</strong>.</li>
+                            <li>Jika nilai TKA sama: <strong>Rerata Nilai Rapor</strong>.</li>
+                            <li>Jika rerata rapor sama: <strong>Usia (Lebih Tua)</strong>.</li>
+                        </ul>
+
+                        <hr class="text-muted opacity-25">
+
+                        <ul class="nav nav-tabs mt-4 mb-3" id="prestasiTabs" role="tablist">
+                            <li class="nav-item"><button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#lomba">Tabel Skor Lomba</button></li>
+                            <li class="nav-item"><button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#hafidz">Hafidz & Kitab Suci</button></li>
+                            <li class="nav-item"><button class="nav-link fw-bold text-warning" data-bs-toggle="tab" data-bs-target="#golden">Golden Ticket & OSIS</button></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="lomba">
+                                <div class="table-responsive table-custom mb-3">
+                                    <table class="table table-sm table-striped mb-0 text-center">
+                                        <thead class="table-primary">
+                                            <tr><th rowspan="2" class="align-middle">Juara</th><th colspan="4">Prestasi Berjenjang (Individu / Beregu)</th></tr>
+                                            <tr><th>Kab/Kota</th><th>Provinsi</th><th>Nasional</th><th>Internasional</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>I</td><td>16 / 8</td><td>32 / 16</td><td>64 / 32</td><td>128 / 64</td></tr>
+                                            <tr><td>II</td><td>8 / 4</td><td>16 / 8</td><td>32 / 16</td><td>64 / 32</td></tr>
+                                            <tr><td>III</td><td>4 / 2</td><td>8 / 4</td><td>16 / 8</td><td>32 / 16</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-responsive table-custom">
+                                    <table class="table table-sm table-striped mb-0 text-center">
+                                        <thead class="table-secondary">
+                                            <tr><th rowspan="2" class="align-middle">Juara</th><th colspan="4">Prestasi Tidak Berjenjang (Individu / Beregu)</th></tr>
+                                            <tr><th>Kab/Kota</th><th>Provinsi</th><th>Nasional</th><th>Internasional</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>I</td><td>8 / 4</td><td>16 / 8</td><td>32 / 16</td><td>64 / 32</td></tr>
+                                            <tr><td>II</td><td>4 / 2</td><td>8 / 4</td><td>16 / 8</td><td>32 / 16</td></tr>
+                                            <tr><td>III</td><td>2 / 1</td><td>4 / 2</td><td>8 / 4</td><td>16 / 8</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert alert-info py-2 mt-2 small">
+                                    <i class="bi bi-info-circle"></i> Delegasi setara dengan <strong>Juara III Tidak Berjenjang</strong> (Individu/Beregu sesuai tingkatannya).
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="hafidz">
+                                <h6 class="fw-bold mt-2">Skor Hafidz Qur'an</h6>
+                                <div class="table-responsive table-custom mb-4 w-75">
+                                    <table class="table table-sm table-striped mb-0 text-center">
+                                        <thead class="table-success"><tr><th>Jumlah Juz</th><th>Skor</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>1 s.d. 6</td><td>4</td></tr>
+                                            <tr><td>7 s.d. 11</td><td>8</td></tr>
+                                            <tr><td>12 s.d. 17</td><td>16</td></tr>
+                                            <tr><td>18 s.d. 23</td><td>32</td></tr>
+                                            <tr><td>24 s.d. 29</td><td>64</td></tr>
+                                            <tr><td>30</td><td>128</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h6 class="fw-bold">Konversi Kitab Suci (Kristen, Katolik, Hindu)</h6>
+                                <p class="small text-muted mb-2">Sistem menghitung rasio jumlah kitab terhadap ekuivalen Juz. Data konversi lengkap (1 s.d 30 Juz) dapat digeser pada tabel di bawah ini:</p>
+                                <div class="table-scrollable">
+                                    <table class="table table-sm table-striped mb-0 text-center" style="font-size: 0.85rem;">
+                                        <thead class="table-dark sticky-top">
+                                            <tr>
+                                                <th>Setara Juz</th>
+                                                <th>Kristen (Jml Kitab)</th>
+                                                <th>Katolik (Jml Kitab)</th>
+                                                <th>Hindu (Jml Kitab)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>1 Juz</td><td>1 s.d. 2</td><td>1 s.d. 2</td><td>1</td></tr>
+                                            <tr><td>2 Juz</td><td>3 s.d. 4</td><td>3 s.d. 4</td><td>2</td></tr>
+                                            <tr><td>3 Juz</td><td>5 s.d. 6</td><td>5 s.d. 7</td><td>3</td></tr>
+                                            <tr><td>4 Juz</td><td>7 s.d. 8</td><td>8 s.d. 9</td><td>4</td></tr>
+                                            <tr><td>5 Juz</td><td>9 s.d. 11</td><td>10 s.d. 12</td><td>5</td></tr>
+                                            <tr><td>6 Juz</td><td>12 s.d. 13</td><td>13 s.d. 14</td><td>6</td></tr>
+                                            <tr><td>7 Juz</td><td>14 s.d. 15</td><td>15 s.d. 17</td><td>7</td></tr>
+                                            <tr><td>8 Juz</td><td>16 s.d. 17</td><td>18 s.d. 19</td><td>8</td></tr>
+                                            <tr><td>9 Juz</td><td>18 s.d. 20</td><td>20 s.d. 22</td><td>9</td></tr>
+                                            <tr><td>10 Juz</td><td>21 s.d. 22</td><td>23 s.d. 24</td><td>10</td></tr>
+                                            <tr><td>11 Juz</td><td>23 s.d. 24</td><td>25 s.d. 27</td><td>11</td></tr>
+                                            <tr><td>12 Juz</td><td>25 s.d. 26</td><td>28 s.d. 29</td><td>12</td></tr>
+                                            <tr><td>13 Juz</td><td>27 s.d. 29</td><td>30 s.d. 32</td><td>13</td></tr>
+                                            <tr><td>14 Juz</td><td>30 s.d. 31</td><td>33 s.d. 34</td><td>14</td></tr>
+                                            <tr><td>15 Juz</td><td>32 s.d. 33</td><td>35 s.d. 36</td><td>15</td></tr>
+                                            <tr><td>16 Juz</td><td>34 s.d. 35</td><td>37 s.d. 39</td><td>16</td></tr>
+                                            <tr><td>17 Juz</td><td>36 s.d. 37</td><td>40 s.d. 41</td><td>17</td></tr>
+                                            <tr><td>18 Juz</td><td>38 s.d. 40</td><td>42 s.d. 44</td><td>18</td></tr>
+                                            <tr><td>19 Juz</td><td>41 s.d. 42</td><td>45 s.d. 46</td><td>-</td></tr>
+                                            <tr><td>20 Juz</td><td>43 s.d. 44</td><td>47 s.d. 49</td><td>13</td></tr>
+                                            <tr><td>21 Juz</td><td>45 s.d. 46</td><td>50 s.d. 51</td><td>14</td></tr>
+                                            <tr><td>22 Juz</td><td>47 s.d. 49</td><td>52 s.d. 54</td><td>-</td></tr>
+                                            <tr><td>23 Juz</td><td>50 s.d. 51</td><td>55 s.d. 56</td><td>15</td></tr>
+                                            <tr><td>24 Juz</td><td>52 s.d. 53</td><td>57 s.d. 59</td><td>-</td></tr>
+                                            <tr><td>25 Juz</td><td>54 s.d. 55</td><td>60 s.d. 61</td><td>16</td></tr>
+                                            <tr><td>26 Juz</td><td>56 s.d. 58</td><td>62 s.d. 64</td><td>-</td></tr>
+                                            <tr><td>27 Juz</td><td>59 s.d. 60</td><td>65 s.d. 66</td><td>17</td></tr>
+                                            <tr><td>28 Juz</td><td>61 s.d. 62</td><td>67 s.d. 69</td><td>18</td></tr>
+                                            <tr><td>29 Juz</td><td>63 s.d. 64</td><td>70 s.d. 71</td><td>-</td></tr>
+                                            <tr><td>30 Juz</td><td>65 s.d. 66</td><td>72 s.d. 73</td><td>18</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="golden">
+                                <div class="card p-3 mb-3 border-0 bg-light">
+                                    <h6 class="fw-bold mb-2">Skor Ketua OSIS / MPK / Kepanduan</h6>
+                                    <ul class="mb-0 small">
+                                        <li>Tingkat Satuan Pendidikan: <strong>Skor 8</strong></li>
+                                        <li>Tingkat Kabupaten/Kota: <strong>Skor 16</strong></li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert golden-ticket p-4 rounded-4 shadow-sm">
+                                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-ticket-detailed-fill text-warning fs-3 me-2 align-middle"></i> Golden Ticket</h5>
+                                    <p class="mb-2 text-dark">Disediakan kuota <strong>1 (satu) calon murid baru</strong> di setiap SMA/SMK untuk:</p>
+                                    <ul class="mb-3 text-dark">
+                                        <li>Pernah menjabat sebagai <strong>Ketua OSIS</strong> (Dibuktikan dgn SK Kepengurusan).</li>
+                                        <li><strong>Penghafal Kitab Suci</strong>.</li>
+                                    </ul>
+                                    <p class="small text-dark opacity-75 mb-0"><em>Catatan: Jika pendaftar golden ticket lebih dari 1 orang di sekolah yang sama, akan diperingkat berdasarkan hafalan terbanyak (untuk kitab suci) atau urutan kriteria prestasi lomba utama (untuk OSIS).</em></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="akademik" role="tabpanel">
+                        <h4 class="section-title"><i class="bi bi-journal-bookmark text-info me-2"></i>5. Jalur Nilai Prestasi Akademik</h4>
+                        
+                        <p class="mb-3 text-muted">Pemeringkatan dilakukan berurutan pada Pilihan 1, 2, hingga 3 (SMA: Pilihan Sekolah | SMK: Pilihan Konsentrasi Keahlian). Urutan kriteria jika pendaftar melebihi kuota:</p>
+
+                        <ul class="rank-list">
+                            <li><strong>Jumlah Nilai Kemampuan Akademik</strong>.</li>
+                            <li>Jika nilai sama, diperingkat berdasarkan <strong>Jarak Domisili Terdekat</strong>.</li>
+                            <li>Jika jarak sama, diperingkat berdasarkan <strong>Rata-rata Nilai TKA</strong> (untuk lulusan 2026) atau <strong>Indeks Sekolah Asal</strong> (untuk lulusan sebelum 2026).</li>
+                            <li>Jika TKA/Indeks sama, diperingkat berurutan dari besaran rerata nilai Rapor mata pelajaran berikut:
+                                <div class="d-flex flex-wrap gap-2 mt-2 mb-1">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">1. Agama & Budi Pekerti</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">2. PPKn / Pancasila</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">3. Bhs. Indonesia</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">4. Matematika</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">5. IPA</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">6. IPS</span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">7. Bhs. Inggris</span>
+                                </div>
+                            </li>
+                            <li>Jika nilai mapel masih sama persis, terakhir diperingkat berdasarkan <strong>Waktu Pendaftaran</strong>.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer-custom text-center mt-auto">
+        <div class="container">
+            <span class="fw-medium">Dibuat oleh Dhickz666</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
