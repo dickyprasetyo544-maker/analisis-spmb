@@ -44,7 +44,7 @@
             z-index: 1050;
             display: flex;
             flex-direction: column; 
-            overflow: visible !important; /* WAJIB: Agar menu dropup tidak terpotong */
+            overflow: visible !important; 
         }
         
         .page-content-wrapper {
@@ -96,7 +96,7 @@
             position: fixed; 
             bottom: 30px;
             right: 30px;
-            z-index: 2000; /* Selalu di atas */
+            z-index: 9999; /* Dimaksimalkan agar tidak tertumpuk elemen lain */
         }
 
         .float-info {
@@ -111,6 +111,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
         }
 
         .float-info:hover {
@@ -146,7 +147,7 @@
                 right: 20px;
             }
         }
-</style>
+    </style>
 </head>
 <body>
 
@@ -269,29 +270,6 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="dropup">
-    <button class="float-info shadow-lg border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Pusat Informasi">
-        <i class="bi bi-journal-bookmark-fill"></i>
-    </button>
-    
-    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-4 p-2" style="min-width: 250px;">
-        <li><h6 class="dropdown-header fw-bold text-dark"><i class="bi bi-info-circle me-1"></i> PUSAT INFORMASI</h6></li>
-        <li><hr class="dropdown-divider"></li>
-        
-        <li><a class="dropdown-item py-2 rounded-3" href="ambilpin"><i class="bi bi-key text-warning me-2 fs-5"></i> Tata Cara Ambil PIN</a></li>
-        <li><a class="dropdown-item py-2 rounded-3" href="kriteria"><i class="bi bi-sort-numeric-up text-info me-2 fs-5"></i> Kriteria Pemeringkatan</a></li>
-        <li><a class="dropdown-item py-2 rounded-3" href="jadwal"><i class="bi bi-calendar-check text-primary me-2 fs-5"></i> Jadwal Lengkap SPMB</a></li>
-        
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item py-2 rounded-3 fw-bold text-success d-flex align-items-center" href="juknis.pdf" download target="_blank">
-                <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i> Unduh Juknis 2026
-            </a>
-        </li>
-    </ul>
-</div>
-
                 <div class="col-lg-7">
                     <div id="placeholderHasil" class="h-100 d-flex flex-column align-items-center justify-content-center text-center p-5 bg-white rounded-5 border-dashed border-2">
                         <i class="bi bi-clipboard2-pulse text-muted opacity-25" style="font-size: 5rem;"></i>
@@ -313,11 +291,32 @@
                         </button>
                     </div>
                 </div>
-            </div>
+                </div>
         </div>
     </div>
 </div>
 
+<div class="dropup">
+    <button class="float-info border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Pusat Informasi">
+        <i class="bi bi-journal-bookmark-fill"></i>
+    </button>
+    
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-4 p-2" style="min-width: 250px;">
+        <li><h6 class="dropdown-header fw-bold text-dark"><i class="bi bi-info-circle me-1"></i> PUSAT INFORMASI</h6></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        <li><a class="dropdown-item py-2 rounded-3" href="ambilpin"><i class="bi bi-key text-warning me-2 fs-5"></i> Tata Cara Ambil PIN</a></li>
+        <li><a class="dropdown-item py-2 rounded-3" href="kriteria"><i class="bi bi-sort-numeric-up text-info me-2 fs-5"></i> Kriteria Pemeringkatan</a></li>
+        <li><a class="dropdown-item py-2 rounded-3" href="jadwal"><i class="bi bi-calendar-check text-primary me-2 fs-5"></i> Jadwal Lengkap SPMB</a></li>
+        
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item py-2 rounded-3 fw-bold text-success d-flex align-items-center" href="juknis.pdf" download target="_blank">
+                <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i> Unduh Juknis 2026
+            </a>
+        </li>
+    </ul>
+</div>
 <script>
     // --- 1. TOGGLE SIDEBAR UNTUK HP ---
     const wrapper = document.getElementById("wrapper");
